@@ -1,0 +1,27 @@
+# Xcode build artifacts
+.derivedData/
+.build/
+.swift-module-cache/
+build/
+DerivedData/
+
+# Xcode user-specific files
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/.DS_Store
+
+# Xcode generated files
+*.pbxproj
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+
+# Dependencies
+.swiftpm/
