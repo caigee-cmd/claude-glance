@@ -27,6 +27,7 @@ default.profraw
 
 # Dependencies
 .swiftpm/
+.tools/
 Vendor/lottie-spm/.git/
 
 # Local scratch files

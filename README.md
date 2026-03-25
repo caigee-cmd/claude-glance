@@ -2,7 +2,7 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
-A native macOS menu bar app for viewing local Claude Code activity and sessions.
+A native macOS menu bar app for viewing local Claude Code activity, sessions, and lightweight usage stats.
 
 ![Claude Glance Demo](docs/screenshots/claude-glance-demo.gif)
 
@@ -24,8 +24,8 @@ Claude Glance passively reads local transcript data under `~/.claude/projects/` 
 
 ### From Release
 
-1. Download `ClaudeGlance.zip`
-2. Unzip `ClaudeGlance.app`
+1. Download the latest `.dmg` or `ClaudeGlance.zip`
+2. Open the DMG or unzip `ClaudeGlance.app`
 3. Move it to `/Applications`
 4. If macOS blocks launch, use `Open Anyway` in `Privacy & Security`
 
@@ -33,6 +33,7 @@ Notes:
 
 - The current public build is unsigned and not notarized.
 - On first launch, macOS may block the app until you manually allow it in `Privacy & Security`.
+- GitHub Releases may include both `ClaudeGlance.zip` and a DMG build. If both are available, the DMG is the easier entry point.
 
 ### From Source
 
@@ -43,7 +44,8 @@ Requirements:
 - Optional: `xcodegen`
 
 ```bash
-cd /Users/cj/Documents/personal/project/claudenotification/ClaudeDash
+git clone git@github.com:caigee-cmd/claude-glance.git
+cd claude-glance
 xcodebuild build -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
 ```
 
@@ -79,10 +81,11 @@ The current public build is passive-only and keeps using `~/Library/Application 
 ## Development
 
 ```bash
-cd /Users/cj/Documents/personal/project/claudenotification/ClaudeDash
+cd claude-glance
 xcodebuild build -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
 xcodebuild test -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
 ./scripts/build-release.sh
+./scripts/build-dmg.sh
 ```
 
 More details:
