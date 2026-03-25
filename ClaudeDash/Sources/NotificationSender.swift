@@ -20,12 +20,12 @@ final class NotificationSender: ObservableObject {
 
     /// 请求通知权限（alert + sound + badge）
     func requestPermission() {
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("[NotificationSender] 权限请求失败: \(error)")
-            }
-            print("[NotificationSender] 通知权限: \(granted ? "已授权" : "被拒绝")")
-        }
+        // center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+        //     if let error = error {
+        //         print("[NotificationSender] 权限请求失败: \(error)")
+        //     }
+        //     print("[NotificationSender] 通知权限: \(granted ? "已授权" : "被拒绝")")
+        // }
     }
 
     // MARK: - 模板变量展开
@@ -63,87 +63,44 @@ final class NotificationSender: ObservableObject {
         summary: String,
         cwd: String
     ) {
-        let defaults = UserDefaults.standard
-
-        // 读取用户设置
-        let template = defaults.string(forKey: "ClaudeDash_notificationTemplate")
-            ?? "{project} 已完成 - 耗时 {duration}，费用 {cost}"
-        let soundName = defaults.string(forKey: "ClaudeDash_notificationSound") ?? "Glass"
-
-        // 展开模板
-        let body = Self.expandTemplate(
-            template,
-            project: project,
-            durationMs: durationMs,
-            cost: cost,
-            summary: summary
-        )
-
-        // 构建通知
-        let content = UNMutableNotificationContent()
-        content.title = "✨ Claude Code 任务完成"
-        content.body = body
-        content.userInfo = ["cwd": cwd]
-
-        // 设置声音
-        if let sound = NotificationSound(rawValue: soundName), sound != .none,
-           let fileName = sound.soundFileName {
-            content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
-        }
-
-        // 是否附加摘要
-        let enableSummary = defaults.bool(forKey: "ClaudeDash_enableSummary")
-        if enableSummary && !summary.isEmpty {
-            content.subtitle = String(summary.prefix(100))
-        }
-
-        // 立即触发
-        let request = UNNotificationRequest(
-            identifier: UUID().uuidString,
-            content: content,
-            trigger: nil
-        )
-
-        center.add(request) { error in
-            if let error = error {
-                print("[NotificationSender] 发送通知失败: \(error)")
-            }
-        }
+        // 通知功能已禁用
+        // let defaults = ClaudeDashDefaults.shared
+        // let template = defaults.string(forKey: "ClaudeDash_notificationTemplate")
+        //     ?? "{project} 已完成 - 耗时 {duration}，费用 {cost}"
+        // let soundName = defaults.string(forKey: "ClaudeDash_notificationSound") ?? "Glass"
+        // let body = Self.expandTemplate(template, project: project, durationMs: durationMs, cost: cost, summary: summary)
+        // let content = UNMutableNotificationContent()
+        // content.title = ClaudeDashCopy.notificationTitle
+        // content.body = body
+        // content.userInfo = ["cwd": cwd]
+        // if let sound = NotificationSound(rawValue: soundName), sound != .none,
+        //    let fileName = sound.soundFileName {
+        //     content.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: fileName))
+        // }
+        // let enableSummary = defaults.bool(forKey: "ClaudeDash_enableSummary")
+        // if enableSummary && !summary.isEmpty {
+        //     content.subtitle = String(summary.prefix(100))
+        // }
+        // let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        // center.add(request) { error in
+        //     if let error = error { print("[NotificationSender] 发送通知失败: \(error)") }
+        // }
     }
 
     // MARK: - 测试通知
 
     /// 发送一条测试通知，同时写入一条模拟 session 数据到统计
     func sendTestNotification() {
-        // 随机测试数据
-        let testProjects = ["my-app", "web-ui", "api-server", "cli-tool", "docs-site"]
-        let project = testProjects.randomElement()!
-        let durationMs = Int.random(in: 15000...180000)
-        let cost = Double.random(in: 0.005...0.15)
-        let summary = "完成了一些代码修改和测试工作。"
-
-        // 发送真实格式的通知
-        sendCompletionNotification(
-            project: project,
-            durationMs: durationMs,
-            cost: cost,
-            summary: summary,
-            cwd: "/Users/test/\(project)"
-        )
-
-        // 同时写入模拟 session 数据，让统计立即更新
-        let record = SessionRecord(
-            project: project,
-            cwd: "/Users/test/\(project)",
-            durationMs: durationMs,
-            cost: cost,
-            summary: summary,
-            transcriptPath: ""
-        )
-        StatsManager.shared.addSession(record)
-
-        // 同步写入 sessions.json（与 Helper 相同逻辑）
-        writeTestSessionToFile(record)
+        // 通知功能已禁用
+        // let testProjects = ["my-app", "web-ui", "api-server", "cli-tool", "docs-site"]
+        // let project = testProjects.randomElement()!
+        // let durationMs = Int.random(in: 15000...180000)
+        // let cost = Double.random(in: 0.005...0.15)
+        // let summary = "完成了一些代码修改和测试工作。"
+        // sendCompletionNotification(project: project, durationMs: durationMs, cost: cost, summary: summary, cwd: "/Users/test/\(project)")
+        // let record = SessionRecord(project: project, cwd: "/Users/test/\(project)", durationMs: durationMs, cost: cost, summary: summary, transcriptPath: "")
+        // StatsManager.shared.addSession(record)
+        // writeTestSessionToFile(record)
     }
 
     /// 将测试 session 写入 sessions.json 文件

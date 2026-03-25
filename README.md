@@ -1,178 +1,257 @@
-# ClaudeDash
+# Claude Glance
 
-原生 macOS 状态栏应用，用于监控 Claude Code 任务完成通知和工作统计。
+A native macOS menu bar app for quickly viewing Claude Code activity, sessions, and local usage stats.
 
-## 功能特性
+一个原生 macOS 菜单栏应用，用来快速查看 Claude Code 的本地活动、会话状态和使用统计。
 
-- **状态栏常驻** — SF Symbol sparkles 图标 + 今日完成次数动态徽章
-- **毛玻璃仪表盘** — 概览统计 / 设置 / 实时监控三个 Tab
-- **一键安装 Hook** — 自动配置 Claude Code Stop Hook，零手动操作
-- **原生通知** — 自定义模板、声音、智能总结
-- **实时监控** — DispatchSource 监听 transcript.jsonl，追踪活跃 session
-- **本地统计** — 今日/30天历史数据，Swift Charts 柱状图
+[Download Latest Release](#installation) · [Why Claude Glance](#why-claude-glance) · [Privacy And Data Access](#privacy-and-data-access)
 
-## 技术栈
+---
 
-- Swift 6 + SwiftUI + AppKit
-- 纯原生框架（UserNotifications, Swift Charts, Foundation）
-- 无任何第三方依赖
-- 体积约 5MB
+Claude Glance gives you a quick, local-first view of what Claude Code has been doing on your machine, without adding a cloud service, account login, or heavyweight dashboard workflow.
 
-## 项目结构
+它默认以被动模式工作：扫描本机 `~/.claude/projects/` 下的 transcript 数据，不依赖云端服务，不要求登录，也不默认修改 Claude 配置。
 
+- Menu bar quick glance
+- Active session floating panel
+- Local transcript scanning
+- CSV / JSON export
+- No cloud dependency
+
+## Why Claude Glance
+
+Claude Code 的 transcript 很有价值，但原始文件并不适合日常回看。Claude Glance 想解决的是几个更直接的问题：
+
+- 今天到底做了多少有效工作
+- 最近哪些 session 花时最多、成本最高
+- 当前有没有活跃会话正在运行
+- 一段时间内 token、工具调用和项目分布是什么样
+
+如果你是长期使用 Claude Code 的开发者，Claude Glance 提供的是一个本地、轻量、随手可见的观察面板，而不是新的代理层、云服务或 IDE 插件。
+
+## Current Features
+
+- 菜单栏常驻图标与今日完成数徽章
+- Quick-glance popover，显示今日会话、成本、时长和最近完成记录
+- 详细统计窗口，包含 `Overview / Tokens / Tools / Projects / Insights`
+- 浮动面板，实时显示活跃 session
+- 历史 transcript 扫描与本地缓存
+- CSV / JSON 导出
+- 纯本地存储
+
+## Screenshots
+
+当前仓库还没有正式截图资源。公开发布前建议补：
+
+- 菜单栏 popover 截图
+- 详细统计窗口截图
+- 浮动面板截图
+
+如果你准备做首个公开 Release，建议把截图放到 `docs/screenshots/`，并在这里直接展示。截图组织方式可参考 [docs/screenshots/README.md](docs/screenshots/README.md)。
+
+## Who It's For
+
+适合：
+
+- 已经在本机使用 Claude Code 的开发者
+- 希望回看本地工作量、会话轨迹和使用统计的人
+- 能接受当前开发者向分发方式的人
+
+不适合：
+
+- 希望一键安装、无系统安全提示的普通终端用户
+- 需要云端同步、团队协作或托管分析的人
+- 期待它替代 Claude Code 本体的人
+
+## Installation
+
+### 从 Release 安装
+
+1. 下载 `ClaudeGlance.zip`
+2. 解压得到 `ClaudeGlance.app`
+3. 将 `ClaudeGlance.app` 拖到 `/Applications`
+4. 按下文 “First Launch on macOS” 处理首次打开
+
+### 从源码构建
+
+要求：
+
+- Xcode 16 或更高版本
+- macOS 14 SDK
+- 可选：`xcodegen`，仅在需要重新生成工程文件时使用
+
+```bash
+cd /Users/cj/Documents/personal/project/claudenotification/ClaudeDash
+xcodebuild build -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
 ```
-ClaudeDash/
+
+如果你修改了 `project.yml`，先重新生成工程：
+
+```bash
+xcodegen generate
+```
+
+## First Launch on macOS
+
+当前公开发布物不是 Developer ID 签名，也没有 notarize。下载到另一台 Mac 时，首次打开可能会被 Gatekeeper 拦截。
+
+如果被阻止：
+
+1. 在 Finder 中右键 `ClaudeGlance.app`
+2. 选择 `Open`
+3. 如果仍被阻止，前往 `System Settings -> Privacy & Security`
+4. 在安全提示区域点击 `Open Anyway`
+
+如果你希望“下载后直接双击即可打开”，后续版本需要接入 Apple Developer Program、Developer ID 和 notarization。
+
+参考：
+
+- [Safely open apps on your Mac](https://support.apple.com/en-us/102445)
+
+## Privacy And Data Access
+
+Claude Glance 默认只做本地读取和本地写入。
+
+| 项目 | 当前行为 |
+| --- | --- |
+| 读取 | `~/.claude/projects/` 下的 transcript / session 数据 |
+| 写入 | `~/Library/Application Support/ClaudeDash/`（为兼容现有版本，目录名暂未重命名） |
+| 联网 | 默认不需要 |
+| 账号登录 | 不需要 |
+| 遥测 / Analytics | 当前不上传使用数据 |
+| 修改 Claude 配置 | 默认不会自动修改 `~/.claude/settings.json` |
+
+默认运行时，Claude Glance 只会在本地创建和更新这些文件：
+
+- `~/Library/Application Support/ClaudeDash/sessions.json`
+- `~/Library/Application Support/ClaudeDash/history-scan-cache.json`
+
+如果你在本地自行启用或实验仓库中的增强 Hook 流程，相关代码会在写入 `~/.claude/settings.json` 之前创建时间戳备份：
+
+- `~/.claude/settings.json.backup.<timestamp>`
+
+更完整的安全与披露流程见 [SECURITY.md](SECURITY.md)。
+
+## Known Limitations
+
+当前公开版本的定位是开发者向分发，已知限制包括：
+
+- 仅支持 macOS 14+
+- 非 Developer ID 分发
+- 未 notarize
+- 暂无自动更新
+- 依赖本机已有 Claude Code transcript 数据
+- 当前没有云同步或多设备聚合能力
+
+## Roadmap
+
+适合公开路线图里优先列出的方向：
+
+- Developer ID 签名与 notarization
+- 更顺滑的安装与升级体验
+- 更完整的截图和演示素材
+- 更稳定的发布自动化流程
+- 更清晰的设置与权限说明
+
+## Project Structure
+
+```text
+claude-glance/
 ├── ClaudeDash/
 │   ├── Sources/
-│   │   ├── ClaudeDashApp.swift      # @main 入口
-│   │   ├── Models.swift             # 共享数据模型
-│   │   ├── StatusBarController.swift # 状态栏控制器
-│   │   ├── StatsManager.swift       # 统计管理器
-│   │   ├── DashboardView.swift      # 仪表盘主视图
-│   │   ├── OverviewTab.swift        # 概览 Tab
-│   │   ├── SettingsTab.swift        # 设置 Tab
-│   │   ├── MonitorTab.swift         # 实时监控 Tab
-│   │   ├── HookInstaller.swift      # Hook 安装器
-│   │   ├── NotificationSender.swift # 通知发送器
-│   │   ├── TranscriptParser.swift   # JSONL 解析器
-│   │   └── SessionMonitor.swift     # 文件监控器
-│   └── Resources/
-│       └── Info.plist               # 应用配置
+│   ├── Resources/
+│   └── ...
 ├── ClaudeDashHelper/
-│   └── main.swift                   # CLI 工具入口
-└── README.md
+├── ClaudeDashTests/
+├── Shared/
+├── docs/
+├── scripts/
+└── project.yml
 ```
 
-## 新建 Xcode 项目步骤
+## Development
 
-### 1. 创建主 App Target
-
-1. 打开 Xcode → File → New → Project
-2. 选择 **macOS → App**
-3. 填写：
-   - Product Name: `ClaudeDash`
-   - Bundle Identifier: `com.yourname.claudedash`
-   - Interface: **SwiftUI**
-   - Language: **Swift**
-4. 选择保存位置，创建项目
-
-### 2. 添加 Helper Target
-
-1. File → New → Target
-2. 选择 **macOS → Command Line Tool**
-3. 填写：
-   - Product Name: `ClaudeDashHelper`
-   - Language: **Swift**
-4. 点击 Finish
-
-### 3. 将 Helper 嵌入 App Bundle
-
-1. 选择 `ClaudeDash` target → Build Phases
-2. 点击 **+** → New Copy Files Phase
-3. 设置：
-   - Destination: **Executables**（或选择 Wrapper → 子路径填 `Contents/MacOS`）
-4. 点击 **+** 添加 `ClaudeDashHelper` 产品
-
-### 4. 粘贴代码
-
-1. 删除 Xcode 自动生成的 `ContentView.swift` 和 `ClaudeDashApp.swift`
-2. 将 `ClaudeDash/Sources/` 下所有 `.swift` 文件拖入 Xcode 的 ClaudeDash target
-3. 将 `ClaudeDashHelper/main.swift` 替换 Helper target 的 `main.swift`
-4. 将 `Resources/Info.plist` 替换项目的 Info.plist
-
-### 5. 配置 Info.plist
-
-确保以下配置正确：
-- `LSUIElement` = `YES`（不在 Dock 显示）
-- Bundle Identifier 一致
-
-### 6. 编译运行
-
-1. 选择 `ClaudeDash` scheme
-2. Product → Build (⌘B)
-3. Product → Run (⌘R)
-4. 状态栏出现 ✨ 图标即成功
-
-## 测试步骤
-
-### 1. 基础功能测试
+常用命令：
 
 ```bash
-# 启动 App 后检查状态栏图标
-# 点击图标 → 应出现菜单
+cd /Users/cj/Documents/personal/project/claudenotification/ClaudeDash
 
-# 点击「打开仪表盘」→ 应弹出毛玻璃窗口
-# 关闭窗口 → App 应继续在状态栏运行
-
-# 点击「测试通知」→ 应收到系统通知
+xcodebuild build -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
+xcodebuild test -project ClaudeDash.xcodeproj -scheme ClaudeDash -destination "platform=macOS"
 ```
 
-### 2. Hook 安装测试
+本地打包 unsigned Release：
 
 ```bash
-# 点击「一键安装 Hook」
-# 检查备份文件
-ls ~/.claude/settings.json.backup.*
-
-# 检查 Hook 配置
-cat ~/.claude/settings.json | python3 -m json.tool
-# 应看到 hooks.Stop 数组中有 ClaudeDashHelper 条目
+cd /Users/cj/Documents/personal/project/claudenotification/ClaudeDash
+chmod +x scripts/build-release.sh
+./scripts/build-release.sh
 ```
 
-### 3. Helper 手动测试
+产物位置：
+
+- `dist/ClaudeGlance.app`
+- `dist/ClaudeGlance.zip`
+
+脚本会同时输出 `ClaudeGlance.zip` 的 SHA-256 校验值。
+
+维护者发布流程见 [docs/releasing.md](docs/releasing.md)。
+
+如果你在做首次公开发布，建议再对照 [docs/open-source-release-checklist.md](docs/open-source-release-checklist.md) 逐项检查。
+
+## Troubleshooting
+
+### App 被 macOS 阻止启动
+
+这是当前 unsigned build 的预期表现。按上文 “First Launch on macOS” 的步骤手动允许。
+
+### 打开后看不到任何 session
+
+先确认：
+
+- 你本机确实在使用 Claude Code
+- `~/.claude/projects/` 下已经有 transcript 文件
+- Claude Glance 有权限读取相关目录
+
+### 统计看起来不对或没有刷新
+
+可以先尝试：
+
+- 退出再重新打开 Claude Glance
+- 重新运行一轮 Claude Code 任务，让新的 transcript 被扫描到
+- 删除 `~/Library/Application Support/ClaudeDash/history-scan-cache.json` 后重启应用，让它重新建立缓存
+
+### 你在本地实验过增强 Hook 流程
+
+如果你手动启用了增强模式或修改了 `~/.claude/settings.json`，排障时请同时检查：
+
+- `~/.claude/settings.json`
+- `~/.claude/settings.json.backup.*`
+
+## Contributing
+
+欢迎 Issue、文档修正和 PR。开始之前建议先看：
+
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SUPPORT.md](SUPPORT.md)
+
+## Uninstall
+
+卸载当前公开版本：
+
+1. 删除 `ClaudeGlance.app`
+2. 删除本地数据目录
 
 ```bash
-# 模拟 Claude Code 调用 Helper
-echo '{
-  "last_assistant_message": "任务已完成，创建了 3 个文件。",
-  "cwd": "/Users/you/project",
-  "total_duration_ms": 30000,
-  "cost": 0.0234,
-  "transcript_path": "/tmp/test-transcript.jsonl"
-}' | /path/to/ClaudeDash.app/Contents/MacOS/ClaudeDashHelper
-
-# 应收到通知，并在 ~/Library/Application Support/ClaudeDash/sessions.json 中看到记录
+rm -rf ~/Library/Application\ Support/ClaudeDash
 ```
 
-### 4. 实时监控测试
+如果你曾手动启用过增强 Hook 路径，还应：
 
-```bash
-# 创建测试 transcript 文件
-echo '{"role":"assistant","content":"正在分析代码..."}' > /tmp/test-transcript.jsonl
+- 从 `~/.claude/settings.json` 删除对应 Hook 条目
+- 或用 `settings.json.backup.*` 恢复原始配置
 
-# 在 App 监控 Tab 中应看到 session 出现
+## License
 
-# 追加新行测试实时更新
-echo '{"role":"assistant","content":[{"type":"tool_use","name":"Read"}]}' >> /tmp/test-transcript.jsonl
-```
-
-## 打包发布
-
-```bash
-# Xcode 打包
-# Product → Archive → Distribute App → Copy App
-
-# 或使用命令行
-xcodebuild archive \
-  -scheme ClaudeDash \
-  -archivePath build/ClaudeDash.xcarchive
-
-xcodebuild -exportArchive \
-  -archivePath build/ClaudeDash.xcarchive \
-  -exportPath build/export \
-  -exportOptionsPlist ExportOptions.plist
-```
-
-## 数据存储位置
-
-| 数据 | 路径 |
-|------|------|
-| 统计设置 | `UserDefaults (com.yourname.claudedash)` |
-| Session 记录 | `~/Library/Application Support/ClaudeDash/sessions.json` |
-| 历史数据 | `~/Library/Application Support/ClaudeDash/history.json` |
-| Hook 配置 | `~/.claude/settings.json` |
-| 配置备份 | `~/.claude/settings.json.backup.*` |
-
-## 许可证
-
-MIT License
+[MIT](LICENSE)

@@ -123,6 +123,44 @@ extension View {
     }
 }
 
+enum StatsPanelStyle {
+    static let compactSpacing: CGFloat = 6
+    static let regularSpacing: CGFloat = 10
+    static let blockSpacing: CGFloat = 12
+    static let cardPadding: CGFloat = 12
+    static let inactiveTextOpacity: Double = 0.64
+    static let secondaryTextOpacity: Double = 0.68
+    static let tertiaryTextOpacity: Double = 0.54
+
+    static var miniLabel: Font {
+        .system(size: 10, weight: .semibold)
+    }
+
+    static var secondaryLabel: Font {
+        .system(size: 11, weight: .semibold)
+    }
+
+    static var miniValue: Font {
+        .system(size: 12, weight: .semibold, design: .monospaced)
+    }
+
+    static var metaValue: Font {
+        .system(size: 11, weight: .medium, design: .monospaced)
+    }
+
+    static var legendValue: Font {
+        .system(size: 14, weight: .bold, design: .rounded)
+    }
+
+    static var sectionHeader: Font {
+        .system(size: 12, weight: .semibold)
+    }
+
+    static var sectionTrailing: Font {
+        .system(size: 11, weight: .medium)
+    }
+}
+
 // MARK: - Glass 指标卡片
 
 struct GlassMetricCard: View {
@@ -186,17 +224,18 @@ struct GlassSectionHeader: View {
     var body: some View {
         HStack {
             Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(.primary.opacity(0.7))
+                .font(StatsPanelStyle.sectionHeader)
+                .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
                 .textCase(.uppercase)
-                .tracking(0.5)
+                .tracking(0.45)
 
             Spacer()
 
             if let trailing {
                 Text(trailing)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(.secondary)
+                    .font(StatsPanelStyle.sectionTrailing)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.inactiveTextOpacity))
+                    .lineLimit(1)
             }
         }
     }

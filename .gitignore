@@ -4,15 +4,17 @@
 .swift-module-cache/
 build/
 DerivedData/
+dist/
+default.profraw
+*.profraw
+*.xcresult
+*.xcactivitylog
 
 # Xcode user-specific files
 *.xcodeproj/xcuserdata/
 *.xcodeproj/project.xcworkspace/xcuserdata/
 *.xcworkspace/xcuserdata/
 *.xcodeproj/.DS_Store
-
-# Xcode generated files
-*.pbxproj
 
 # macOS
 .DS_Store
@@ -25,3 +27,13 @@ DerivedData/
 
 # Dependencies
 .swiftpm/
+Vendor/lottie-spm/.git/
+
+# Local scratch files
+*~
+Sweet run cycle.json
+
+# Internal planning / design exploration
+docs/superpowers/
+
+Vendor/lottie-spm/.git.localbak/

@@ -10,9 +10,8 @@ struct ClaudeDashApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     var body: some Scene {
-        // 使用 Settings scene 作为占位，实际窗口由 StatusBarController 管理
         Settings {
-            EmptyView()
+            SettingsView()
         }
     }
 }
@@ -30,13 +29,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     let sessionMonitor = SessionMonitor.shared
     /// 通知发送器
     let notificationSender = NotificationSender.shared
+    /// Hook 集成状态
+    let hookIntegrationManager = HookIntegrationManager.shared
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         // 设置 App 为 accessory 模式：不在 Dock 显示图标，不激活主窗口
         NSApp.setActivationPolicy(.accessory)
 
-        // 请求通知权限
-        notificationSender.requestPermission()
+        ClaudeDashDefaults.migrateFromStandardIfNeeded()
+
+        // 强制零入侵模式
+        hookIntegrationManager.setMonitoringMode(.passive)
 
         // 初始化状态栏控制器
         statusBarController = StatusBarController(
@@ -47,10 +50,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 启动 JSONL 目录扫描
         sessionMonitor.startMonitoring()
+        statusBarController?.presentInitialMascotSetupIfNeeded()
     }
 
     func applicationWillTerminate(_ notification: Notification) {
         // 清理所有 DispatchSource 资源
         sessionMonitor.stopAllMonitoring()
+        hookIntegrationManager.stop()
     }
 }

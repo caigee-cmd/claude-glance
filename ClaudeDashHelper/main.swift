@@ -17,6 +17,15 @@ let appSupportDir: URL = {
 /// sessions.json 路径
 let sessionsFilePath = appSupportDir.appendingPathComponent("sessions.json")
 
+func loadSharedDefaults() -> UserDefaults {
+    UserDefaults(suiteName: "com.claudedash.shared") ?? .standard
+}
+
+let monitoringMode = loadSharedDefaults().string(forKey: "ClaudeDash_monitoringMode") ?? "passive"
+if monitoringMode != "enhanced" {
+    exit(0)
+}
+
 // MARK: - 1. 从 stdin 读取 JSON
 
 let inputData = FileHandle.standardInput.readDataToEndOfFile()
@@ -45,12 +54,11 @@ let transcriptPath = hookInput.transcript_path ?? ""
 /// 从 UserDefaults 读取最小触发时长（秒），默认 15 秒
 let minDurationSeconds: Double = {
     // 尝试从共享 UserDefaults 读取
-    let defaults = UserDefaults.standard
-    let value = defaults.double(forKey: "ClaudeDash_minDuration")
+    let value = loadSharedDefaults().double(forKey: "ClaudeDash_minDuration")
     return value > 0 ? value : 15.0
 }()
 
-let longTaskOnly: Bool = UserDefaults.standard.bool(forKey: "ClaudeDash_longTaskOnly")
+let longTaskOnly: Bool = loadSharedDefaults().bool(forKey: "ClaudeDash_longTaskOnly")
 
 if longTaskOnly && Double(durationMs) / 1000.0 < minDurationSeconds {
     // 低于阈值，静默退出
@@ -64,7 +72,7 @@ func sendNotification() {
     let semaphore = DispatchSemaphore(value: 0)
 
     // 读取模板和声音设置
-    let defaults = UserDefaults.standard
+    let defaults = loadSharedDefaults()
     let template = defaults.string(forKey: "ClaudeDash_notificationTemplate")
         ?? "{project} 已完成 - 耗时 {duration}，费用 {cost}"
     let soundName = defaults.string(forKey: "ClaudeDash_notificationSound") ?? "Glass"
@@ -79,7 +87,7 @@ func sendNotification() {
 
     // 构建通知
     let content = UNMutableNotificationContent()
-    content.title = "✨ Claude Code 任务完成"
+    content.title = ClaudeDashCopy.notificationTitle
     content.body = body
     content.userInfo = ["cwd": cwd]
 

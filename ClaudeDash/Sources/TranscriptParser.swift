@@ -5,6 +5,94 @@
 import Foundation
 import Combine
 
+enum TranscriptParserRules {
+    private static let interruptionMarker = "[request interrupted by user"
+    private static let clearCommandMarker = "<command-name>/clear</command-name>"
+    private static let commandNameMarker = "<command-name>/"
+    private static let localCommandStdoutMarker = "<local-command-stdout>"
+    private static let localCommandStderrMarker = "<local-command-stderr>"
+
+    static func userLineRepresentsInterruption(_ json: [String: Any]) -> Bool {
+        if containsInterruptionMarker(in: json["toolUseResult"]) {
+            return true
+        }
+
+        guard let message = json["message"] as? [String: Any] else { return false }
+        return containsInterruptionMarker(in: message["content"])
+    }
+
+    private static func containsInterruptionMarker(in value: Any?) -> Bool {
+        switch value {
+        case let text as String:
+            return text.lowercased().contains(interruptionMarker)
+        case let dictionary as [String: Any]:
+            if let interrupted = dictionary["interrupted"] as? Bool, interrupted {
+                return true
+            }
+            return dictionary.values.contains { containsInterruptionMarker(in: $0) }
+        case let array as [Any]:
+            return array.contains { containsInterruptionMarker(in: $0) }
+        default:
+            return false
+        }
+    }
+
+    static func userLineShouldActivateSession(_ json: [String: Any]) -> Bool {
+        if json["isMeta"] as? Bool == true {
+            return false
+        }
+
+        guard let message = json["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            return true
+        }
+
+        let lowered = content.lowercased()
+
+        if lowered.contains(clearCommandMarker) {
+            return false
+        }
+
+        if lowered.contains(commandNameMarker) {
+            return false
+        }
+
+        if lowered.contains(localCommandStdoutMarker) || lowered.contains(localCommandStderrMarker) {
+            return false
+        }
+
+        return true
+    }
+
+    static func userLineStatus(_ json: [String: Any]) -> SessionStatus? {
+        userLineShouldActivateSession(json) ? .thinking : nil
+    }
+
+    static func systemLineShouldActivateSession(_ json: [String: Any]) -> Bool {
+        let subtype = (json["subtype"] as? String)?.lowercased()
+        return subtype != "local_command"
+    }
+
+    static func assistantLineStatus(_ json: [String: Any]) -> SessionStatus? {
+        guard let message = json["message"] as? [String: Any] else { return nil }
+        let contentBlocks = message["content"] as? [[String: Any]] ?? []
+        let stopReason = (message["stop_reason"] as? String)?.lowercased()
+
+        let blockTypes = Set(contentBlocks.compactMap { $0["type"] as? String })
+        if blockTypes.contains("tool_use") {
+            return .toolRunning
+        }
+        if blockTypes.contains("thinking") || blockTypes.contains("redacted_thinking") {
+            return .thinking
+        }
+        if blockTypes.contains("text") {
+            return stopReason == "end_turn" ? .completed : .thinking
+        }
+
+        return nil
+    }
+}
+
 final class TranscriptParser: ObservableObject, @unchecked Sendable {
     @Published private(set) var lastMessages: [TranscriptMessage] = []
     @Published private(set) var currentStatus: SessionStatus = .unknown
@@ -76,10 +164,6 @@ final class TranscriptParser: ObservableObject, @unchecked Sendable {
             parseUserLine(json)
         case "progress":
             parseProgressLine(json)
-        case "system":
-            if statusValue == .unknown {
-                statusValue = .thinking
-            }
         default:
             break
         }
@@ -118,25 +202,32 @@ final class TranscriptParser: ObservableObject, @unchecked Sendable {
         let summary = toolName.map { "[\($0)]" } ?? String(textContent.prefix(200))
         appendMessage(TranscriptMessage(role: "assistant", content: summary, toolName: toolName))
 
+        if let nextStatus = TranscriptParserRules.assistantLineStatus(json) {
+            statusValue = nextStatus
+        }
+
         if let toolName {
-            statusValue = .toolRunning
             toolValue = mapToolName(toolName)
-        } else {
-            statusValue = .thinking
+        } else if statusValue != .toolRunning {
             toolValue = .unknown
         }
     }
 
     private func parseUserLine(_ json: [String: Any]) {
+        if TranscriptParserRules.userLineRepresentsInterruption(json) {
+            statusValue = .completed
+            toolValue = .unknown
+            appendMessage(TranscriptMessage(role: "user", content: "[interrupted]"))
+            return
+        }
+
+        guard let nextStatus = TranscriptParserRules.userLineStatus(json) else { return }
+
         guard let message = json["message"] as? [String: Any] else { return }
         let contentBlocks = message["content"] as? [[String: Any]] ?? []
 
         let hasToolResult = contentBlocks.contains { $0["type"] as? String == "tool_result" }
-        statusValue = .thinking
-        if hasToolResult {
-            toolValue = .unknown
-        }
-
+        statusValue = nextStatus
         appendMessage(TranscriptMessage(role: "user", content: hasToolResult ? "[tool_result]" : "user input"))
     }
 
@@ -155,7 +246,7 @@ final class TranscriptParser: ObservableObject, @unchecked Sendable {
                 toolValue = mapToolName(String(toolPart))
             }
         case "PostToolUse":
-            statusValue = .thinking
+            statusValue = .unknown
             toolValue = .unknown
         case "Stop":
             statusValue = .completed

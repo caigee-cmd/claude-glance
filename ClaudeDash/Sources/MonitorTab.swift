@@ -44,7 +44,7 @@ struct MonitorTab: View {
                 // 空状态
                 VStack(spacing: 12) {
                     Spacer()
-                    Image(systemName: "waveform.slash")
+                    Image(systemName: ClaudeDashSymbols.monitorEmptyState)
                         .font(.largeTitle)
                         .foregroundStyle(.tertiary)
                     Text("暂无活跃 Session")
@@ -129,7 +129,7 @@ struct MonitorTab: View {
             // 未选中状态
             VStack(spacing: 12) {
                 Spacer()
-                Image(systemName: "sidebar.left")
+                    Image(systemName: ClaudeDashSymbols.monitorSelectionState)
                     .font(.largeTitle)
                     .foregroundStyle(.tertiary)
                 Text("选择一个 Session 查看详情")

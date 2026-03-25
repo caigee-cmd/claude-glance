@@ -89,3 +89,84 @@ final class HistoryScannerCacheTests: XCTestCase {
         XCTAssertEqual(refreshedScan.first?.toolUseCount, 1)
     }
 }
+
+final class SessionDirectoryScannerTests: XCTestCase {
+    func testScanDetectsFreshTranscriptAndCompletesStaleTrackedTranscript() throws {
+        let tempDir = FileManager.default.temporaryDirectory
+            .appendingPathComponent(UUID().uuidString, isDirectory: true)
+        defer { try? FileManager.default.removeItem(at: tempDir) }
+
+        let projectsDir = tempDir.appendingPathComponent(".claude/projects", isDirectory: true)
+        let projectDir = projectsDir.appendingPathComponent("-Users-cj-demo", isDirectory: true)
+        try FileManager.default.createDirectory(at: projectDir, withIntermediateDirectories: true)
+
+        let now = Date()
+        let activeURL = projectDir.appendingPathComponent("active.jsonl")
+        let staleURL = projectDir.appendingPathComponent("stale.jsonl")
+        try "{}\n".write(to: activeURL, atomically: true, encoding: .utf8)
+        try "{}\n".write(to: staleURL, atomically: true, encoding: .utf8)
+
+        try FileManager.default.setAttributes(
+            [.modificationDate: now.addingTimeInterval(-5)],
+            ofItemAtPath: activeURL.path
+        )
+        try FileManager.default.setAttributes(
+            [.modificationDate: now.addingTimeInterval(-180)],
+            ofItemAtPath: staleURL.path
+        )
+
+        let result = SessionDirectoryScanner.scan(
+            baseDir: projectsDir.path,
+            trackedActivity: [staleURL.path: true],
+            activeThreshold: 30,
+            completionThreshold: 90,
+            now: now
+        )
+
+        XCTAssertEqual(result.activeFiles.map(\.path), [activeURL.path])
+        XCTAssertEqual(result.activeFiles.first?.projectName, "demo")
+        XCTAssertEqual(result.completedPaths, [staleURL.path])
+    }
+}
+
+final class HookInstallerConfigurationTests: XCTestCase {
+    func testHookStatusReportsMissingWhenEnhancedHookIsAbsent() {
+        let settings: [String: Any] = [
+            "hooks": [
+                "Stop": [
+                    ["type": "command", "command": "/usr/bin/other-helper"]
+                ]
+            ]
+        ]
+
+        let status = HookInstaller.hookStatus(
+            for: settings,
+            helperCommand: "/Applications/ClaudeDash.app/Contents/Resources/ClaudeDashHelper",
+            helperIsExecutable: true
+        )
+
+        XCTAssertEqual(status, .missing)
+    }
+
+    func testMergeStopHookPreservesExistingEntriesAndAppendsHelper() throws {
+        let originalSettings: [String: Any] = [
+            "hooks": [
+                "Stop": [
+                    ["type": "command", "command": "/usr/bin/existing-hook"]
+                ]
+            ]
+        ]
+
+        let result = HookInstaller.mergeStopHook(
+            into: originalSettings,
+            helperCommand: "/Applications/ClaudeDash.app/Contents/Resources/ClaudeDashHelper"
+        )
+
+        XCTAssertEqual(result.outcome, .installed)
+        let hooks = try XCTUnwrap(result.settings["hooks"] as? [String: Any])
+        let stopHooks = try XCTUnwrap(hooks["Stop"] as? [[String: Any]])
+        XCTAssertEqual(stopHooks.count, 2)
+        XCTAssertEqual(stopHooks.first?["command"] as? String, "/usr/bin/existing-hook")
+        XCTAssertEqual(stopHooks.last?["command"] as? String, "/Applications/ClaudeDash.app/Contents/Resources/ClaudeDashHelper")
+    }
+}

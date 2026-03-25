@@ -1,6 +1,6 @@
 // StatusBarController.swift
 // ClaudeDash - 状态栏控制器
-// 管理 NSStatusItem、Popover 面板、动态徽章、设置/统计窗口
+// 管理 NSStatusItem、Popover 面板、动态徽章、统计窗口
 
 import AppKit
 import SwiftUI
@@ -13,8 +13,8 @@ final class StatusBarController: NSObject {
     private var statusItem: NSStatusItem
     private let popover = NSPopover()
     private var eventMonitor: Any?
-    private var settingsWindow: NSWindow?
     private var statsWindow: NSWindow?
+    private var settingsWindow: NSWindow?
     private let statsManager: StatsManager
     private let sessionMonitor: SessionMonitor
     private let notificationSender: NotificationSender
@@ -44,12 +44,19 @@ final class StatusBarController: NSObject {
     private func setupStatusBarIcon() {
         guard let button = statusItem.button else { return }
 
-        let config = NSImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-        if let image = NSImage(systemSymbolName: "sparkles", accessibilityDescription: "ClaudeDash") {
-            let configured = image.withSymbolConfiguration(config) ?? image
-            configured.isTemplate = true
-            button.image = configured
+        if let assetImage = NSImage(named: NSImage.Name("MenuBarIcon"))?.copy() as? NSImage {
+            assetImage.size = NSSize(width: 20, height: 20)
+            assetImage.isTemplate = true
+            button.image = assetImage
             button.imagePosition = .imageLeading
+        } else {
+            let config = NSImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+            if let image = NSImage(systemSymbolName: "chart.line.uptrend.xyaxis", accessibilityDescription: "Claude Glance") {
+                let configured = image.withSymbolConfiguration(config) ?? image
+                configured.isTemplate = true
+                button.image = configured
+                button.imagePosition = .imageLeading
+            }
         }
 
         button.action = #selector(togglePopover)
@@ -76,16 +83,12 @@ final class StatusBarController: NSObject {
 
     private func setupPopover() {
         let popoverView = StatusBarPopoverView(
-            onOpenSettings: { [weak self] in
-                self?.closePopover()
-                self?.openSettings()
-            },
             onOpenStats: { [weak self] in
                 self?.closePopover()
                 self?.openStatsDetail()
             },
-            onTestNotification: { [weak self] in
-                self?.notificationSender.sendTestNotification()
+            onTestNotification: {
+                // 通知功能已禁用
             },
             onInstallHook: { [weak self] in
                 self?.closePopover()
@@ -93,6 +96,10 @@ final class StatusBarController: NSObject {
             },
             onTogglePanel: { [weak self] in
                 self?.floatingPanel?.togglePanel()
+            },
+            onOpenSettings: { [weak self] in
+                self?.closePopover()
+                self?.openSettingsDetail()
             },
             onQuit: {
                 NSApp.terminate(nil)
@@ -134,27 +141,6 @@ final class StatusBarController: NSObject {
         }
     }
 
-    // MARK: - 设置窗口
-
-    private func openSettings() {
-        if let window = settingsWindow {
-            window.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-
-        let settingsView = SettingsTab()
-            .frame(minWidth: 500, minHeight: 400)
-            .background(.ultraThinMaterial)
-
-        let window = makeWindow(
-            title: "ClaudeDash 设置",
-            size: NSSize(width: 520, height: 480),
-            content: settingsView
-        )
-        self.settingsWindow = window
-    }
-
     // MARK: - 统计详情窗口
 
     private func openStatsDetail() {
@@ -168,11 +154,49 @@ final class StatusBarController: NSObject {
             .environmentObject(statsManager)
 
         let window = makeWindow(
-            title: "ClaudeDash 统计",
+            title: "Claude Glance 统计",
             size: NSSize(width: 740, height: 680),
             content: statsView
         )
+        // 统计窗口使用标准不透明背景，避免黑底
+        window.isOpaque = true
+        window.backgroundColor = .windowBackgroundColor
         self.statsWindow = window
+    }
+
+    private func openSettingsDetail() {
+        openSettingsDetail(isFirstLaunchSetup: false)
+    }
+
+    func presentInitialMascotSetupIfNeeded() {
+        guard !FloatingMascotPreferences.didCompleteSetup() else { return }
+        openSettingsDetail(isFirstLaunchSetup: true)
+    }
+
+    private func openSettingsDetail(isFirstLaunchSetup: Bool) {
+        if let window = settingsWindow {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let settingsView = SettingsView(
+            isFirstLaunchSetup: isFirstLaunchSetup,
+            onFinishSetup: { [weak self] in
+                guard let self else { return }
+                if FloatingMascotPreferences.didCompleteSetup() {
+                    self.settingsWindow?.performClose(nil)
+                }
+            }
+        )
+        let window = makeWindow(
+            title: "Claude Glance 设置",
+            size: NSSize(width: 560, height: isFirstLaunchSetup ? 420 : 360),
+            content: settingsView
+        )
+        window.isOpaque = true
+        window.backgroundColor = NSColor.windowBackgroundColor
+        self.settingsWindow = window
     }
 
     // MARK: - 窗口工厂
@@ -187,7 +211,7 @@ final class StatusBarController: NSObject {
         window.center()
         window.title = title
         window.titlebarAppearsTransparent = true
-        window.titleVisibility = .hidden
+        window.titleVisibility = .visible
         window.isOpaque = false
         window.backgroundColor = .clear
         window.contentView = NSHostingView(rootView: content)
@@ -195,9 +219,18 @@ final class StatusBarController: NSObject {
         window.delegate = self
 
         window.makeKeyAndOrderFront(nil)
+        NSApp.setActivationPolicy(.regular)
         NSApp.activate(ignoringOtherApps: true)
 
         return window
+    }
+
+    /// 当所有独立窗口关闭时，恢复 accessory 模式（不显示 Dock 图标）
+    private func revertToAccessoryIfNeeded() {
+        let hasVisibleWindow = statsWindow?.isVisible == true || settingsWindow?.isVisible == true
+        if !hasVisibleWindow {
+            NSApp.setActivationPolicy(.accessory)
+        }
     }
 }
 
@@ -205,7 +238,16 @@ final class StatusBarController: NSObject {
 
 extension StatusBarController: NSWindowDelegate {
     func windowWillClose(_ notification: Notification) {
-        // 窗口关闭后 App 继续在状态栏运行
+        if notification.object as AnyObject? === statsWindow {
+            statsWindow = nil
+        }
+        if notification.object as AnyObject? === settingsWindow {
+            settingsWindow = nil
+        }
+        // 窗口关闭后恢复 accessory 模式
+        DispatchQueue.main.async { [weak self] in
+            self?.revertToAccessoryIfNeeded()
+        }
     }
 }
 

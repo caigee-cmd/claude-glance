@@ -12,29 +12,38 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
 
+packages:
+  Lottie:
+    path: Vendor/lottie-spm
+
 targets:
 
   ClaudeDash:
     type: application
     platform: macOS
     sources:
+      - path: Shared
       - path: ClaudeDash/Sources
+      - path: ClaudeDash/Resources
+        excludes:
+          - Info.plist
     info:
       path: ClaudeDash/Resources/Info.plist
       properties:
-        CFBundleName: ClaudeDash
-        CFBundleDisplayName: ClaudeDash
+        CFBundleName: Claude Glance
+        CFBundleDisplayName: Claude Glance
         CFBundleIdentifier: com.claudedash.app
         CFBundleShortVersionString: "1.0.0"
         CFBundleVersion: "1"
         LSUIElement: true
         LSMinimumSystemVersion: "14.0"
         NSUserNotificationAlertStyle: alert
-        NSDesktopFolderUsageDescription: "ClaudeDash 需要访问桌面文件以监控 Claude Code 的 transcript 文件。"
-        NSDocumentsFolderUsageDescription: "ClaudeDash 需要访问文档以监控 Claude Code 的 transcript 文件。"
-        NSDownloadsFolderUsageDescription: "ClaudeDash 需要访问下载目录以监控 Claude Code 的 transcript 文件。"
+        NSDesktopFolderUsageDescription: "Claude Glance 需要访问桌面文件以监控 Claude Code 的 transcript 文件。"
+        NSDocumentsFolderUsageDescription: "Claude Glance 需要访问文档以监控 Claude Code 的 transcript 文件。"
+        NSDownloadsFolderUsageDescription: "Claude Glance 需要访问下载目录以监控 Claude Code 的 transcript 文件。"
     settings:
       base:
+        PRODUCT_NAME: ClaudeGlance
         PRODUCT_BUNDLE_IDENTIFIER: com.claudedash.app
         INFOPLIST_FILE: ClaudeDash/Resources/Info.plist
         CODE_SIGN_ENTITLEMENTS: ""
@@ -44,11 +53,13 @@ targets:
         codeSign: true
         copyPhase:
           destination: executables
+      - package: Lottie
 
   ClaudeDashHelper:
     type: tool
     platform: macOS
     sources:
+      - path: Shared
       - path: ClaudeDashHelper
     settings:
       base:

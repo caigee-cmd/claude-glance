@@ -1,6 +1,6 @@
 // DashboardView.swift
 // ClaudeDash - 仪表盘主视图
-// TabView 容器，毛玻璃背景，包含概览/设置/实时监控三个 Tab
+// TabView 容器，毛玻璃背景，包含概览/实时监控两个 Tab
 
 import SwiftUI
 
@@ -20,17 +20,10 @@ struct DashboardView: View {
                 }
                 .tag(DashboardTab.overview)
 
-            // 设置 Tab
-            SettingsTab()
-                .tabItem {
-                    Label("设置", systemImage: "gearshape.fill")
-                }
-                .tag(DashboardTab.settings)
-
             // 实时监控 Tab
             MonitorTab()
                 .tabItem {
-                    Label("监控", systemImage: "waveform.badge.magnifyingglass")
+                    Label("监控", systemImage: ClaudeDashSymbols.monitorTab)
                 }
                 .tag(DashboardTab.monitor)
         }
@@ -42,7 +35,6 @@ struct DashboardView: View {
 /// 仪表盘 Tab 枚举
 enum DashboardTab: Hashable {
     case overview
-    case settings
     case monitor
 }
 

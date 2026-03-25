@@ -10,9 +10,9 @@ struct WeekComparisonView: View {
     let changePercentDouble: (Double, Double) -> Double
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: StatsPanelStyle.blockSpacing) {
             // 主指标对比
-            HStack(spacing: 8) {
+            HStack(alignment: .top, spacing: StatsPanelStyle.regularSpacing) {
                 comparisonCard(
                     icon: "checkmark.circle.fill",
                     label: "Sessions",
@@ -48,7 +48,7 @@ struct WeekComparisonView: View {
             }
 
             // 二级指标
-            HStack(spacing: 8) {
+            HStack(spacing: StatsPanelStyle.regularSpacing) {
                 miniComparison(label: "Active Days", thisValue: "\(thisWeek.activeDays)/7", lastValue: "\(lastWeek.activeDays)/7")
                 miniComparison(label: "Tool Uses", thisValue: "\(thisWeek.toolUses)", lastValue: "\(lastWeek.toolUses)")
                 miniComparison(label: "Messages", thisValue: "\(thisWeek.messages)", lastValue: "\(lastWeek.messages)")
@@ -61,70 +61,99 @@ struct WeekComparisonView: View {
         thisValue: String, lastValue: String,
         change: Double, color: Color
     ) -> some View {
-        VStack(spacing: 6) {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundStyle(color)
+        VStack(alignment: .leading, spacing: StatsPanelStyle.regularSpacing) {
+            HStack(spacing: StatsPanelStyle.compactSpacing) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(color)
+                    .frame(width: 14)
 
-            Text(thisValue)
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-
-            // 变化 badge
-            if abs(change) > 0.5 {
-                HStack(spacing: 2) {
-                    Image(systemName: change > 0 ? "arrow.up.right" : "arrow.down.right")
-                        .font(.system(size: 9, weight: .bold))
-                    Text(String(format: "%.0f%%", abs(change)))
-                        .font(.system(size: 11, weight: .semibold))
-                }
-                .foregroundStyle(change > 0 ? .green : .red)
-                .padding(.horizontal, 5)
-                .padding(.vertical, 2)
-                .background(
-                    (change > 0 ? Color.green : Color.red).opacity(0.1),
-                    in: Capsule()
-                )
-            } else {
-                Text("—")
-                    .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
+                Text(label)
+                    .font(StatsPanelStyle.secondaryLabel)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
+                    .lineLimit(1)
             }
 
-            Text(label)
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.primary.opacity(0.65))
+            Text(thisValue)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
 
-            // 上周
-            Text("prev: \(lastValue)")
-                .font(.system(size: 10, design: .monospaced))
-                .foregroundStyle(.tertiary)
+            HStack(alignment: .bottom, spacing: 8) {
+                comparisonChangeBadge(change: change)
+
+                Spacer(minLength: 0)
+
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Last week")
+                        .font(StatsPanelStyle.miniLabel)
+                        .foregroundStyle(.primary.opacity(StatsPanelStyle.tertiaryTextOpacity))
+                        .lineLimit(1)
+
+                    Text(lastValue)
+                        .font(StatsPanelStyle.metaValue)
+                        .foregroundStyle(.primary.opacity(StatsPanelStyle.inactiveTextOpacity))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.75)
+                }
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, StatsPanelStyle.cardPadding)
+        .padding(.vertical, StatsPanelStyle.cardPadding)
         .statsCard(cornerRadius: 14)
     }
 
     private func miniComparison(label: String, thisValue: String, lastValue: String) -> some View {
-        VStack(spacing: 3) {
+        VStack(alignment: .leading, spacing: StatsPanelStyle.compactSpacing) {
+            Text(label)
+                .font(StatsPanelStyle.secondaryLabel)
+                .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
+                .lineLimit(1)
+
             HStack(spacing: 4) {
                 Text(thisValue)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
-                Text("←")
-                    .font(.system(size: 10))
-                    .foregroundStyle(.tertiary)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                Text("vs")
+                    .font(StatsPanelStyle.miniLabel)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.tertiaryTextOpacity))
                 Text(lastValue)
-                    .font(.system(size: 12, design: .monospaced))
-                    .foregroundStyle(.secondary)
+                    .font(StatsPanelStyle.metaValue)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.inactiveTextOpacity))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
-            Text(label)
-                .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.primary.opacity(0.65))
+            .lineLimit(1)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, StatsPanelStyle.cardPadding)
+        .padding(.vertical, 11)
         .statsBackground(cornerRadius: 10)
+    }
+
+    private func comparisonChangeBadge(change: Double) -> some View {
+        HStack(spacing: 3) {
+            if abs(change) > 0.5 {
+                Image(systemName: change > 0 ? "arrow.up.right" : "arrow.down.right")
+                    .font(.system(size: 9, weight: .bold))
+
+                Text(String(format: "%.0f%%", abs(change)))
+                    .monospacedDigit()
+            } else {
+                Text("Flat")
+            }
+        }
+        .font(StatsPanelStyle.secondaryLabel)
+        .lineLimit(1)
+        .foregroundStyle(change > 0 ? .green : (abs(change) > 0.5 ? .red : .secondary))
+        .padding(.horizontal, 6)
+        .padding(.vertical, 3)
+        .background(
+            (change > 0 ? Color.green : (abs(change) > 0.5 ? Color.red : Color.secondary)).opacity(0.1),
+            in: Capsule()
+        )
     }
 }

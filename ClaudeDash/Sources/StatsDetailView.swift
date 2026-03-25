@@ -74,28 +74,25 @@ struct StatsDetailView: View {
 
             Spacer()
 
-            HStack(spacing: 10) {
-                miniStat(icon: "sum", value: "\(statsManager.totalCompletionsAllTime)")
-                miniStat(icon: "creditcard", value: statsManager.totalCostAllTime.usdFormatted)
-                miniStat(icon: "textformat.123", value: statsManager.totalTokensAllTime.tokenFormatted)
+            HStack(spacing: 8) {
+                miniStat(icon: "sum", label: "Sessions", value: "\(statsManager.totalCompletionsAllTime)")
+                miniStat(icon: ClaudeDashSymbols.totalCost, label: "Cost", value: statsManager.totalCostAllTime.usdFormatted)
+                miniStat(icon: "textformat.123", label: "Tokens", value: statsManager.totalTokensAllTime.tokenFormatted)
             }
-
-            Spacer()
-
         }
     }
 
     private var tabBar: some View {
-        HStack(spacing: 2) {
+        HStack(spacing: 4) {
             ForEach(StatsTab.allCases, id: \.self) { tab in
                 Button {
                     selectedTab = tab
                 } label: {
                     Text(tab.rawValue)
                         .font(.system(size: 13, weight: selectedTab == tab ? .semibold : .medium))
-                        .foregroundStyle(selectedTab == tab ? Color.primary : Color.primary.opacity(0.55))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 7)
+                        .foregroundStyle(selectedTab == tab ? Color.primary : Color.primary.opacity(StatsPanelStyle.inactiveTextOpacity))
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 8)
                         .background {
                             if selectedTab == tab {
                                 Capsule()
@@ -110,40 +107,33 @@ struct StatsDetailView: View {
         .statsBackground(cornerRadius: 14)
     }
 
-    private func miniStat(icon: String, value: String) -> some View {
-        HStack(spacing: 5) {
+    private func miniStat(icon: String, label: String, value: String) -> some View {
+        HStack(spacing: StatsPanelStyle.compactSpacing) {
             Image(systemName: icon)
                 .font(.system(size: 11))
-            Text(value)
-                .font(.system(size: 12, weight: .medium, design: .monospaced))
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(label)
+                    .font(StatsPanelStyle.miniLabel)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.inactiveTextOpacity))
+                    .lineLimit(1)
+
+                Text(value)
+                    .font(StatsPanelStyle.miniValue)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
         }
-        .foregroundStyle(.primary.opacity(0.6))
+        .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
+        .padding(.horizontal, 9)
+        .padding(.vertical, 6)
+        .statsBackground(cornerRadius: 10)
     }
 
     private var statsWindowBackground: some View {
-        ZStack {
-            LinearGradient(
-                colors: [
-                    Color(red: 0.08, green: 0.09, blue: 0.12),
-                    Color(red: 0.11, green: 0.12, blue: 0.16),
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color.claudePurple.opacity(0.08),
-                            Color.claudeCyan.opacity(0.04),
-                            .clear,
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-        }
+        Color(nsColor: .windowBackgroundColor)
     }
 
     // MARK: - Overview Tab
@@ -152,7 +142,7 @@ struct StatsDetailView: View {
         LazyVStack(spacing: 16) {
             // Rings + 今日详情
             HStack(alignment: .top, spacing: 16) {
-                VStack(spacing: 10) {
+                VStack(spacing: StatsPanelStyle.blockSpacing) {
                     ActivityRingsView(
                         sessionProgress: statsManager.sessionRingProgress,
                         weeklyProgress: statsManager.weeklyActivityProgress,
@@ -162,7 +152,7 @@ struct StatsDetailView: View {
                         size: 190
                     )
 
-                    HStack(spacing: 16) {
+                    HStack(spacing: 18) {
                         ringLegendItem(color: .claudePurple, label: "Sessions", value: "\(statsManager.todayCompletionCount)")
                         ringLegendItem(color: .claudeCyan.opacity(0.7), label: "7-Day", value: "\(Int(statsManager.weeklyActivityProgress * 7))/7")
                         ringLegendItem(color: .claudeCyan, label: "Tokens", value: "\(Int(statsManager.tokenRingProgress * 100))%")
@@ -172,13 +162,13 @@ struct StatsDetailView: View {
                 .frame(maxWidth: .infinity)
                 .statsCard(cornerRadius: 20)
 
-                VStack(spacing: 8) {
+                VStack(spacing: StatsPanelStyle.regularSpacing) {
                     detailStatCard(title: "Sessions", value: "\(statsManager.todayCompletionCount)", trend: statsManager.completionTrend, icon: "checkmark.circle.fill", color: .green)
                     detailStatCard(title: "Cost", value: statsManager.todayCost.usdFormatted, trendValue: statsManager.costTrend, icon: "dollarsign.circle.fill", color: .orange)
                     detailStatCard(title: "Duration", value: statsManager.todayDurationSeconds.durationFormatted, trendDuration: statsManager.durationTrend, icon: "clock.fill", color: .blue)
                     detailStatCard(title: "Avg / Task", value: statsManager.averageDurationPerTask.durationFormatted, subtitle: statsManager.averageCostPerTask.usdFormatted + " avg cost", icon: "gauge.medium", color: .claudePurple)
                 }
-                .frame(width: 200)
+                .frame(width: 220)
             }
             .padding(.horizontal, 24)
 
@@ -504,17 +494,19 @@ struct StatsDetailView: View {
     // MARK: - 子组件
 
     private func ringLegendItem(color: Color, label: String, value: String) -> some View {
-        VStack(spacing: 4) {
+        VStack(spacing: StatsPanelStyle.compactSpacing) {
             Circle()
                 .fill(color)
                 .frame(width: 10, height: 10)
                 .shadow(color: color.opacity(0.4), radius: 2)
             Text(value)
-                .font(.system(size: 14, weight: .bold, design: .rounded))
+                .font(StatsPanelStyle.legendValue)
                 .monospacedDigit()
+                .lineLimit(1)
             Text(label)
-                .font(.system(size: 11))
-                .foregroundStyle(.primary.opacity(0.6))
+                .font(StatsPanelStyle.secondaryLabel)
+                .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
+                .lineLimit(1)
         }
     }
 
@@ -523,13 +515,13 @@ struct StatsDetailView: View {
         trend: Int? = nil, trendValue: Double? = nil, trendDuration: Double? = nil,
         subtitle: String? = nil, icon: String, color: Color
     ) -> some View {
-        HStack(spacing: 12) {
+        HStack(spacing: StatsPanelStyle.cardPadding) {
             Image(systemName: icon)
                 .font(.system(size: 16))
                 .foregroundStyle(color)
                 .frame(width: 22)
 
-            VStack(alignment: .leading, spacing: 3) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(value)
                     .font(.system(.title2, design: .rounded, weight: .bold))
                     .monospacedDigit()
@@ -537,9 +529,13 @@ struct StatsDetailView: View {
                     .minimumScaleFactor(0.6)
 
                 Text(subtitle ?? title)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.secondary)
+                    .font(StatsPanelStyle.secondaryLabel)
+                    .foregroundStyle(.primary.opacity(StatsPanelStyle.secondaryTextOpacity))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .layoutPriority(1)
 
             Spacer()
 
@@ -551,7 +547,7 @@ struct StatsDetailView: View {
                 trendBadge(direction: td > 0 ? 1 : -1, text: abs(td).durationFormatted)
             }
         }
-        .padding(10)
+        .padding(StatsPanelStyle.cardPadding)
         .statsCard(cornerRadius: 14)
     }
 
@@ -560,7 +556,10 @@ struct StatsDetailView: View {
             Image(systemName: direction > 0 ? "arrow.up.right" : "arrow.down.right")
                 .font(.system(size: 10, weight: .bold))
             Text(text)
-                .font(.system(size: 11, weight: .medium))
+                .font(StatsPanelStyle.metaValue)
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
         }
         .foregroundStyle(direction > 0 ? .green : .red)
         .padding(.horizontal, 6)
@@ -675,7 +674,7 @@ struct StatsDetailView: View {
         let pct = totalSessions > 0 ? Double(item.count) / Double(totalSessions) : 0
 
         return HStack(spacing: 10) {
-            Image(systemName: "cpu")
+            Image(systemName: ClaudeDashSymbols.model)
                 .font(.system(size: 10))
                 .foregroundStyle(Color.claudePurple)
                 .frame(width: 14)
@@ -792,7 +791,8 @@ struct StatsDetailView: View {
                 Text(stat.totalDurationSeconds.durationFormatted)
                     .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .foregroundStyle(.blue)
-                    .frame(width: 50, alignment: .trailing)
+                    .lineLimit(1)
+                    .frame(width: 70, alignment: .trailing)
             }
         }
         .padding(.horizontal, 12)
@@ -827,7 +827,7 @@ struct StatsDetailView: View {
         }
 
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = "claudedash_stats.\(ext)"
+        panel.nameFieldStringValue = "claude_glance_stats.\(ext)"
         panel.allowedContentTypes = ext == "csv" ? [.commaSeparatedText] : [.json]
         panel.begin { response in
             guard response == .OK, let url = panel.url else { return }

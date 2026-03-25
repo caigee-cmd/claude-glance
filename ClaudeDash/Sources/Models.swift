@@ -2,7 +2,57 @@
 // ClaudeDash - 共享数据模型定义
 // 所有 target 共用的数据结构
 
+import CoreGraphics
 import Foundation
+
+enum ClaudeDashDefaults {
+    static let suiteName = "com.claudedash.shared"
+    nonisolated(unsafe) static let shared = UserDefaults(suiteName: suiteName) ?? .standard
+
+    private static let migratableKeys = [
+        MonitoringMode.userDefaultsKey,
+        "ClaudeDash_minDuration",
+        "ClaudeDash_notificationTemplate",
+        "ClaudeDash_notificationSound",
+        "ClaudeDash_enableSummary",
+        "ClaudeDash_longTaskOnly",
+        "ClaudeDash_dailyCostBudget",
+        FloatingMascotSizeOption.userDefaultsKey,
+        FloatingMascotAnimationSpeedOption.userDefaultsKey,
+        FloatingMascotPreferences.enabledUserDefaultsKey,
+        FloatingMascotPreferences.didCompleteSetupUserDefaultsKey
+    ]
+
+    static func migrateFromStandardIfNeeded() {
+        let standard = UserDefaults.standard
+        for key in migratableKeys where shared.object(forKey: key) == nil {
+            guard let value = standard.object(forKey: key) else { continue }
+            shared.set(value, forKey: key)
+        }
+    }
+}
+
+enum FloatingMascotPreferences {
+    static let enabledUserDefaultsKey = "ClaudeDash_floatingMascotEnabled"
+    static let didCompleteSetupUserDefaultsKey = "ClaudeDash_floatingMascotDidCompleteSetup"
+
+    static func isEnabled(defaults: UserDefaults = ClaudeDashDefaults.shared) -> Bool {
+        defaults.bool(forKey: enabledUserDefaultsKey)
+    }
+
+    static func didCompleteSetup(defaults: UserDefaults = ClaudeDashDefaults.shared) -> Bool {
+        defaults.bool(forKey: didCompleteSetupUserDefaultsKey)
+    }
+
+    static func setEnabled(_ enabled: Bool, defaults: UserDefaults = ClaudeDashDefaults.shared) {
+        defaults.set(enabled, forKey: enabledUserDefaultsKey)
+        defaults.set(true, forKey: didCompleteSetupUserDefaultsKey)
+    }
+
+    static func markSetupCompleted(defaults: UserDefaults = ClaudeDashDefaults.shared) {
+        defaults.set(true, forKey: didCompleteSetupUserDefaultsKey)
+    }
+}
 
 // MARK: - Session 记录（Helper 写入，主 App 读取）
 
@@ -120,6 +170,143 @@ struct StopHookInput: Codable {
 }
 
 // MARK: - App 设置
+
+enum MonitoringMode: String, Codable, CaseIterable, Sendable {
+    case passive
+    case enhanced
+
+    static let userDefaultsKey = "ClaudeDash_monitoringMode"
+
+    var title: String {
+        switch self {
+        case .passive: return "零侵入"
+        case .enhanced: return "增强模式"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .passive:
+            return "只监听 transcript 文件，不修改 Claude 配置"
+        case .enhanced:
+            return "额外启用 Hook，提供更精确的完成事件与通知"
+        }
+    }
+}
+
+enum HookIntegrationStatus: Equatable, Sendable {
+    case inactive
+    case installed
+    case missing
+    case helperUnavailable
+
+    var description: String {
+        switch self {
+        case .inactive:
+            return "增强模式未启用"
+        case .installed:
+            return "Hook 已安装并生效"
+        case .missing:
+            return "Hook 配置缺失"
+        case .helperUnavailable:
+            return "Helper 不可执行"
+        }
+    }
+
+    var canAutoRepair: Bool {
+        self == .missing
+    }
+}
+
+enum FloatingMascotSizeOption: String, Codable, CaseIterable, Identifiable, Sendable {
+    case compact
+    case small
+    case medium
+    case large
+    case extraLarge
+    case jumbo
+
+    static let userDefaultsKey = "ClaudeDash_floatingMascotSize"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .compact: return "更小"
+        case .small: return "小"
+        case .medium: return "中"
+        case .large: return "大"
+        case .extraLarge: return "更大"
+        case .jumbo: return "超大"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .compact:
+            return "最紧凑，尽量减少存在感。"
+        case .small:
+            return "更轻巧，但已经足够清晰。"
+        case .medium:
+            return "默认推荐，观感更平衡。"
+        case .large:
+            return "存在感最强，陪伴感更明显。"
+        case .extraLarge:
+            return "更醒目，动画细节更容易看清。"
+        case .jumbo:
+            return "最大尺寸。"
+        }
+    }
+
+    var mascotLength: CGFloat {
+        switch self {
+        case .compact: return 72
+        case .small: return 82
+        case .medium: return 92
+        case .large: return 104
+        case .extraLarge: return 118
+        case .jumbo: return 134
+        }
+    }
+}
+
+enum FloatingMascotAnimationSpeedOption: String, Codable, CaseIterable, Identifiable, Sendable {
+    case slow
+    case normal
+    case fast
+    case veryFast
+
+    static let userDefaultsKey = "ClaudeDash_floatingMascotAnimationSpeed"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .slow: return "慢"
+        case .normal: return "标准"
+        case .fast: return "快"
+        case .veryFast: return "很快"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .slow: return "更安静、更从容。"
+        case .normal: return "默认推荐。"
+        case .fast: return "更有活力。"
+        case .veryFast: return "动作更明显。"
+        }
+    }
+
+    var multiplier: Double {
+        switch self {
+        case .slow: return 0.85
+        case .normal: return 1.0
+        case .fast: return 1.18
+        case .veryFast: return 1.35
+        }
+    }
+}
 
 /// 通知声音选项
 enum NotificationSound: String, Codable, CaseIterable {

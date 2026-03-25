@@ -3,132 +3,201 @@
 
 import SwiftUI
 
+private enum PopoverPanelStyle {
+    static let width: CGFloat = 364
+    static let outerPadding: CGFloat = 14
+    static let metricSpacing: CGFloat = 4
+    static let sectionLabelSpacing: CGFloat = 6
+    static let borderOpacity: Double = 0.10
+    static let secondaryTextOpacity: Double = 0.68
+    static let tertiaryTextOpacity: Double = 0.52
+
+    static var titleFont: Font {
+        .system(size: 15, weight: .semibold)
+    }
+
+    static var metricLabelFont: Font {
+        .system(size: 9, weight: .semibold)
+    }
+
+    static var metricValueFont: Font {
+        .system(size: 15, weight: .bold, design: .rounded)
+    }
+
+    static var sectionTitleFont: Font {
+        .system(size: 11, weight: .semibold)
+    }
+
+    static var rowTitleFont: Font {
+        .system(size: 12, weight: .semibold)
+    }
+
+    static var rowMetaFont: Font {
+        .system(size: 10, weight: .medium)
+    }
+}
+
 struct StatusBarPopoverView: View {
     @EnvironmentObject var statsManager: StatsManager
     @EnvironmentObject var sessionMonitor: SessionMonitor
+    @AppStorage(
+        FloatingMascotPreferences.enabledUserDefaultsKey,
+        store: ClaudeDashDefaults.shared
+    ) private var isMascotEnabled = false
 
-    var onOpenSettings: () -> Void
     var onOpenStats: () -> Void
     var onTestNotification: () -> Void
     var onInstallHook: () -> Void
     var onTogglePanel: () -> Void
+    var onOpenSettings: () -> Void
     var onQuit: () -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             header
-                .padding(.horizontal, 16)
-                .padding(.top, 14)
-                .padding(.bottom, 12)
-
-            Divider().opacity(0.15)
-
-            todayMetrics
-                .padding(.horizontal, 16)
+                .padding(.horizontal, PopoverPanelStyle.outerPadding)
                 .padding(.top, 12)
-                .padding(.bottom, 12)
+                .padding(.bottom, 8)
+
+            ringsOverview
+                .padding(.horizontal, PopoverPanelStyle.outerPadding)
+                .padding(.bottom, 8)
 
             if !sessionMonitor.activeSessions.isEmpty {
-                Divider().opacity(0.15)
+                sectionDivider
 
                 activeSessionsSection
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, PopoverPanelStyle.outerPadding)
                     .padding(.top, 10)
                     .padding(.bottom, 10)
             }
 
             if !statsManager.recentSessions.isEmpty {
-                Divider().opacity(0.15)
+                sectionDivider
 
                 recentCompletionsSection
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, PopoverPanelStyle.outerPadding)
                     .padding(.top, 10)
                     .padding(.bottom, 10)
             }
 
             if sessionMonitor.activeSessions.isEmpty && statsManager.recentSessions.isEmpty {
-                Divider().opacity(0.15)
+                sectionDivider
 
                 emptyState
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 16)
+                    .padding(.horizontal, PopoverPanelStyle.outerPadding)
+                    .padding(.vertical, 12)
             }
 
-            Divider().opacity(0.15)
+            sectionDivider
 
             actionBar
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 10)
                 .padding(.vertical, 8)
         }
-        .frame(width: 360)
-        .background(.ultraThinMaterial)
+        .frame(width: PopoverPanelStyle.width)
+        .background {
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .strokeBorder(Color.white.opacity(PopoverPanelStyle.borderOpacity), lineWidth: 0.5)
+                }
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
     }
 
     // MARK: - Header
 
     private var header: some View {
-        HStack(spacing: 0) {
-            Image(systemName: "sparkles")
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(ClaudeGradients.primary)
+        HStack(spacing: 8) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.white.opacity(0.055))
 
-            Text("ClaudeDash")
-                .font(.system(size: 15, weight: .semibold))
-                .padding(.leading, 6)
+                Image(systemName: ClaudeDashSymbols.appBadge)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(ClaudeGradients.primary)
+            }
+            .frame(width: 24, height: 24)
+
+            Text("Claude Glance")
+                .font(PopoverPanelStyle.titleFont)
 
             Spacer()
 
             if statsManager.usageStreak > 1 {
-                HStack(spacing: 3) {
+                HStack(spacing: 4) {
                     Image(systemName: "flame.fill")
-                        .font(.system(size: 10))
+                        .font(.system(size: 10, weight: .semibold))
                     Text("\(statsManager.usageStreak)d")
                         .font(.system(size: 12, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                 }
                 .foregroundStyle(.orange)
                 .padding(.horizontal, 8)
-                .padding(.vertical, 3)
-                .glassBackground(cornerRadius: 8)
+                .padding(.vertical, 4)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.06))
+                        .overlay(
+                            Capsule()
+                                .strokeBorder(Color.white.opacity(0.08), lineWidth: 0.5)
+                        )
+                )
             }
         }
     }
 
-    // MARK: - Today Metrics
+    // MARK: - Rings Overview
 
-    private var todayMetrics: some View {
-        HStack(spacing: 8) {
-            metricCell(
-                value: "\(statsManager.todayCompletionCount)",
-                label: "Sessions",
-                icon: "checkmark.circle.fill",
-                color: .green,
-                trend: statsManager.completionTrend
-            )
-            metricCell(
-                value: statsManager.todayCost.usdFormatted,
-                label: "Cost",
-                icon: "dollarsign.circle.fill",
-                color: .orange,
-                trendDouble: statsManager.costTrend
-            )
-            metricCell(
-                value: statsManager.todayDurationSeconds.durationFormatted,
-                label: "Duration",
-                icon: "clock.fill",
-                color: .blue,
-                trendDouble: statsManager.durationTrend
-            )
-            metricCell(
-                value: statsManager.todayTotalTokens.tokenFormatted,
-                label: "Tokens",
-                icon: "sum",
-                color: .claudeCyan
-            )
+    private var ringsOverview: some View {
+        HStack(alignment: .top, spacing: 10) {
+            VStack {
+                ActivityRingsView(
+                    sessionProgress: statsManager.sessionRingProgress,
+                    weeklyProgress: statsManager.weeklyActivityProgress,
+                    tokenProgress: statsManager.tokenRingProgress,
+                    centerValue: statsManager.todayTotalTokens.tokenFormatted,
+                    centerSubtitle: "tokens today",
+                    size: 108
+                )
+                .padding(4)
+            }
+            .frame(width: 116)
+            .statsBackground(cornerRadius: 14)
+
+            VStack(spacing: 0) {
+                popoverMetric(
+                    value: "\(statsManager.todayCompletionCount)",
+                    label: "Sessions",
+                    icon: "checkmark.circle.fill",
+                    color: .green,
+                    trend: statsManager.completionTrend
+                )
+                popoverMetric(
+                    value: statsManager.todayCost.usdFormatted,
+                    label: "Cost",
+                    icon: "dollarsign.circle.fill",
+                    color: .orange,
+                    trendDouble: statsManager.costTrend
+                )
+                popoverMetric(
+                    value: statsManager.todayDurationSeconds.durationFormatted,
+                    label: "Duration",
+                    icon: "clock.fill",
+                    color: .blue,
+                    trendDouble: statsManager.durationTrend
+                )
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .statsBackground(cornerRadius: 14)
+            .frame(maxWidth: .infinity)
         }
     }
 
-    private func metricCell(
+    private func popoverMetric(
         value: String, label: String, icon: String, color: Color,
         trend: Int? = nil, trendDouble: Double? = nil
     ) -> some View {
@@ -138,38 +207,50 @@ struct StatusBarPopoverView: View {
             return 0
         }()
 
-        return VStack(spacing: 4) {
-            HStack(spacing: 3) {
+        return HStack(spacing: 8) {
+            ZStack {
+                Circle()
+                    .fill(color.opacity(0.14))
                 Image(systemName: icon)
-                    .font(.system(size: 11))
+                    .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(color)
-                if dir != 0 {
-                    Image(systemName: dir > 0 ? "arrow.up.right" : "arrow.down.right")
-                        .font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(dir > 0 ? .green : .red)
-                }
+            }
+            .frame(width: 20, height: 20)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(label)
+                    .font(PopoverPanelStyle.metricLabelFont)
+                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
+                    .tracking(0.35)
+                    .lineLimit(1)
+
+                Text(value)
+                    .font(PopoverPanelStyle.metricValueFont)
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.65)
             }
 
-            Text(value)
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+            Spacer(minLength: 6)
 
-            Text(label)
-                .font(.system(size: 10, weight: .medium))
-                .foregroundStyle(.secondary)
+            if dir != 0 {
+                compactTrendBadge(direction: dir)
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 10)
-        .glassBackground(cornerRadius: 10)
+        .padding(.vertical, 6)
+        .overlay(alignment: .bottom) {
+            Rectangle()
+                .fill(Color.white.opacity(0.06))
+                .frame(height: 0.5)
+                .opacity(label == "Duration" ? 0 : 1)
+        }
     }
 
     // MARK: - Active Sessions
 
     private var activeSessionsSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            sectionLabel("Active", count: sessionMonitor.activeSessions.count)
+            sectionLabel("Active", count: sessionMonitor.activeSessions.count, accent: .yellow)
 
             ForEach(sessionMonitor.activeSessions.prefix(3)) { session in
                 ActiveSessionRow(session: session)
@@ -181,7 +262,7 @@ struct StatusBarPopoverView: View {
 
     private var recentCompletionsSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            sectionLabel("Recent")
+            sectionLabel("Recent", accent: .green)
 
             ForEach(statsManager.recentSessions.suffix(3)) { session in
                 RecentSessionRow(session: session)
@@ -193,7 +274,7 @@ struct StatusBarPopoverView: View {
 
     private var emptyState: some View {
         HStack(spacing: 10) {
-            Image(systemName: "sparkles")
+            Image(systemName: ClaudeDashSymbols.appBadge)
                 .font(.system(size: 20))
                 .foregroundStyle(.quaternary)
 
@@ -202,66 +283,113 @@ struct StatusBarPopoverView: View {
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.secondary)
                 Text("Stats will appear after your first task")
-                    .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
             }
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .statsBackground(cornerRadius: 14)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Action Bar
 
     private var actionBar: some View {
-        HStack(spacing: 2) {
-            actionButton(icon: "chart.bar.fill", label: "Stats", action: onOpenStats)
-            actionButton(icon: "macwindow", label: "Panel", action: onTogglePanel)
+        HStack(spacing: 4) {
+            actionButton(icon: "chart.bar.fill", label: "Stats", prominence: .primary, action: onOpenStats)
+            actionButton(
+                icon: ClaudeDashSymbols.panelAction,
+                label: isMascotEnabled ? "Mascot On" : "Mascot Off",
+                prominence: isMascotEnabled ? .primary : .regular,
+                action: onTogglePanel
+            )
             actionButton(icon: "gearshape", label: "Settings", action: onOpenSettings)
-            actionButton(icon: "arrow.down.circle", label: "Hook", action: onInstallHook)
-
-            Spacer()
-
-            Button(action: onQuit) {
-                Image(systemName: "power")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(.secondary)
-                    .frame(width: 28, height: 28)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            actionButton(icon: ClaudeDashSymbols.quitAction, label: "Quit", action: onQuit)
         }
+        .padding(4)
+        .statsBackground(cornerRadius: 16)
     }
 
     // MARK: - Helpers
 
-    private func sectionLabel(_ title: String, count: Int? = nil) -> some View {
-        HStack(spacing: 4) {
+    private var sectionDivider: some View {
+        Rectangle()
+            .fill(Color.white.opacity(0.08))
+            .frame(height: 0.5)
+            .padding(.horizontal, 10)
+    }
+
+    private func sectionLabel(_ title: String, count: Int? = nil, accent: Color = .primary) -> some View {
+        HStack(spacing: PopoverPanelStyle.sectionLabelSpacing) {
+            Circle()
+                .fill(accent)
+                .frame(width: 6, height: 6)
+
             Text(title.uppercased())
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(.secondary)
-                .tracking(0.5)
+                .font(PopoverPanelStyle.sectionTitleFont)
+                .foregroundStyle(.primary.opacity(PopoverPanelStyle.secondaryTextOpacity))
+                .tracking(0.55)
 
             if let count {
-                Text("(\(count))")
-                    .font(.system(size: 11, weight: .medium, design: .rounded))
-                    .foregroundStyle(.tertiary)
+                Text("\(count)")
+                    .font(.system(size: 10, weight: .semibold, design: .rounded))
+                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Capsule().fill(Color.white.opacity(0.05)))
             }
         }
     }
 
-    private func actionButton(icon: String, label: String, action: @escaping () -> Void) -> some View {
+    private func compactTrendBadge(direction: Int) -> some View {
+        Image(systemName: direction > 0 ? "arrow.up.right" : "arrow.down.right")
+            .font(.system(size: 8, weight: .bold))
+            .foregroundStyle(direction > 0 ? .green : .red)
+            .frame(width: 18, height: 18)
+            .background(
+                Circle()
+                    .fill((direction > 0 ? Color.green : Color.red).opacity(0.12))
+            )
+    }
+
+    private enum ActionProminence {
+        case regular
+        case primary
+    }
+
+    private func actionButton(
+        icon: String,
+        label: String,
+        prominence: ActionProminence = .regular,
+        action: @escaping () -> Void
+    ) -> some View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Image(systemName: icon)
-                    .font(.system(size: 12))
+                    .font(.system(size: 11))
                 Text(label)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(.system(size: 10, weight: .medium))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 6)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 7)
+            .background {
+                if prominence == .primary {
+                    Capsule()
+                        .fill(Color.white.opacity(0.12))
+                        .overlay(
+                            Capsule()
+                                .strokeBorder(Color.white.opacity(0.10), lineWidth: 0.5)
+                        )
+                }
+            }
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(prominence == .primary ? Color.primary : Color.primary.opacity(0.72))
     }
 }
 
@@ -278,28 +406,48 @@ struct ActiveSessionRow: View {
                 .frame(width: 6, height: 6)
                 .shadow(color: statusColor.opacity(0.5), radius: 2)
 
-            Text(session.project)
-                .font(.system(size: 13, weight: .medium))
-                .lineLimit(1)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(session.project)
+                    .font(PopoverPanelStyle.rowTitleFont)
+                    .lineLimit(1)
 
-            Spacer()
+                HStack(spacing: 6) {
+                    Text(activityLabel)
+                        .font(PopoverPanelStyle.rowMetaFont)
+                        .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
+                        .lineLimit(1)
 
-            if session.tokenUsage > 0 {
-                MiniTokenBar(usage: session.tokenUsage)
-                    .frame(width: 32)
+                    if session.tokenUsage > 0 {
+                        MiniTokenBar(usage: session.tokenUsage)
+                            .frame(width: 42, height: 4)
+                    }
+                }
             }
 
-            Text(elapsedTime)
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundStyle(.secondary)
+            Spacer(minLength: 6)
 
-            Image(systemName: session.currentTool.sfSymbol)
-                .font(.system(size: 11))
-                .foregroundStyle(.tertiary)
+            HStack(spacing: 4) {
+                Image(systemName: session.currentTool.sfSymbol)
+                    .font(.system(size: 9, weight: .semibold))
+                Text(elapsedTime)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .monospacedDigit()
+            }
+            .foregroundStyle(.primary.opacity(PopoverPanelStyle.secondaryTextOpacity))
+            .padding(.horizontal, 7)
+            .padding(.vertical, 4)
+            .background(Capsule().fill(Color.white.opacity(0.06)))
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .glassBackground(cornerRadius: 8)
+        .background {
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .fill(Color.white.opacity(isHovered ? 0.08 : 0.06))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.07), lineWidth: 0.5)
+                }
+        }
         .brightness(isHovered ? 0.03 : 0)
         .animation(.easeOut(duration: 0.15), value: isHovered)
         .onHover { isHovered = $0 }
@@ -320,6 +468,10 @@ struct ActiveSessionRow: View {
         let minutes = seconds / 60
         if minutes < 60 { return "\(minutes)m \(seconds % 60)s" }
         return "\(minutes / 60)h \(minutes % 60)m"
+    }
+
+    private var activityLabel: String {
+        session.currentTool == .unknown ? "Live session" : session.currentTool.rawValue
     }
 }
 
@@ -357,30 +509,40 @@ struct RecentSessionRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "checkmark.circle.fill")
-                .font(.system(size: 11))
+                .font(.system(size: 10))
                 .foregroundStyle(.green.opacity(0.7))
 
-            Text(session.project)
-                .font(.system(size: 13, weight: .medium))
-                .lineLimit(1)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(session.project)
+                    .font(PopoverPanelStyle.rowTitleFont)
+                    .lineLimit(1)
 
-            Spacer()
+                Text(session.completedAt.timeAgo)
+                    .font(PopoverPanelStyle.rowMetaFont)
+                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
+            }
 
-            Text(session.durationMs.humanReadableDuration)
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundStyle(.secondary)
+            Spacer(minLength: 6)
 
-            Text(session.cost.usdFormatted)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .foregroundStyle(.primary.opacity(0.65))
-
-            Text(session.completedAt.timeAgo)
-                .font(.system(size: 10))
-                .foregroundStyle(.tertiary)
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(session.durationMs.humanReadableDuration)
+                    .font(.system(size: 10, weight: .medium, design: .monospaced))
+                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.secondaryTextOpacity))
+                Text(session.cost.usdFormatted)
+                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                    .foregroundStyle(.primary.opacity(0.78))
+            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 7)
-        .glassBackground(cornerRadius: 8)
+        .background {
+            RoundedRectangle(cornerRadius: 11, style: .continuous)
+                .fill(Color.white.opacity(isHovered ? 0.08 : 0.06))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 11, style: .continuous)
+                        .strokeBorder(Color.white.opacity(0.07), lineWidth: 0.5)
+                }
+        }
         .brightness(isHovered ? 0.03 : 0)
         .animation(.easeOut(duration: 0.15), value: isHovered)
         .onHover { isHovered = $0 }

@@ -1,0 +1,17 @@
+GEM
+  specs:
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    rake (13.0.6)
+
+PLATFORMS
+  universal-darwin-22
+  universal-darwin-23
+
+DEPENDENCIES
+  rake (~> 13.0.0)!
+
+BUNDLED WITH
+   2.3.19
