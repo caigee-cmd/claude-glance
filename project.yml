@@ -4,13 +4,15 @@ options:
   bundleIdPrefix: com.claudedash
   deploymentTarget:
     macOS: "14.0"
-  xcodeVersion: "16.0"
+  xcodeVersion: "15.4"
   generateEmptyDirectories: true
 
 settings:
   base:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "14.0"
+    ARCHS: "arm64 x86_64"
+    VALID_ARCHS: "arm64 x86_64"
 
 packages:
   Lottie:
