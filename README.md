@@ -26,14 +26,6 @@ Quick glance at today's stats, active sessions, and recent completions — all f
 
 ![Menu bar popover](docs/screenshots/menupannel.png)
 
-Floating panel for richer context and recent activity.
-
-Floating panel detail for recent activity and active session context.
-
-![Stats window](docs/screenshots/stastic.png)
-
-Stats view for local usage trends and lightweight analysis.
-
 ## Installation
 
 ### From Release
