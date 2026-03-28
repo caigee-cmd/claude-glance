@@ -6,7 +6,7 @@ private enum SettingsPanelStyle {
     static let shellPadding: CGFloat = 16
     static let shellSpacing: CGFloat = 14
     static let shellCornerRadius: CGFloat = 26
-    static let previewHeight: CGFloat = 232
+    static let previewHeight: CGFloat = 296
     static let controlPadding: CGFloat = 12
     static let optionSpacing: CGFloat = 8
     static let optionPreviewSize: CGFloat = 46
@@ -66,7 +66,7 @@ struct SettingsView: View {
     }
 
     private var previewMascotLength: CGFloat {
-        min(selectedMascotSize.mascotLength + 52, 196)
+        min(selectedMascotSize.mascotLength + 64, 280)
     }
 
     private var previewAccentColor: Color {
@@ -227,21 +227,30 @@ struct SettingsView: View {
                 ZStack {
                     Ellipse()
                         .fill(Color.black.opacity(0.07))
-                        .frame(width: 144, height: 22)
+                        .frame(
+                            width: max(144, previewMascotLength * 0.92),
+                            height: max(22, previewMascotLength * 0.14)
+                        )
                         .blur(radius: 16)
-                        .offset(y: 48)
+                        .offset(y: max(48, previewMascotLength * 0.24))
 
                     Circle()
                         .fill(previewAccentColor.opacity(isMascotEnabled ? 0.15 : 0.08))
-                        .frame(width: 148, height: 148)
+                        .frame(
+                            width: max(148, previewMascotLength + 8),
+                            height: max(148, previewMascotLength + 8)
+                        )
                         .blur(radius: 44)
                         .offset(y: 10)
 
                     Circle()
                         .fill(Color.white.opacity(0.045))
-                        .frame(width: 94, height: 94)
+                        .frame(
+                            width: max(94, previewMascotLength * 0.62),
+                            height: max(94, previewMascotLength * 0.62)
+                        )
                         .blur(radius: 20)
-                        .offset(y: -16)
+                        .offset(y: -18)
 
                     FloatingMascotLottieView(
                         appearance: selectedAppearance,

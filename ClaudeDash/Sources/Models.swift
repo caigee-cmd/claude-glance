@@ -296,7 +296,7 @@ enum FloatingMascotSizeOption: String, Codable, CaseIterable, Identifiable, Send
         case .extraLarge:
             return "更醒目，动画细节更容易看清。"
         case .jumbo:
-            return "最大尺寸。"
+            return "上限更高，适合想要明显存在感。"
         }
     }
 
@@ -307,7 +307,7 @@ enum FloatingMascotSizeOption: String, Codable, CaseIterable, Identifiable, Send
         case .medium: return 100
         case .large: return 114
         case .extraLarge: return 128
-        case .jumbo: return 144
+        case .jumbo: return 220
         }
     }
 }

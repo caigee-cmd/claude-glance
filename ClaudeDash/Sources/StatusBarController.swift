@@ -191,7 +191,7 @@ final class StatusBarController: NSObject {
         )
         let window = makeWindow(
             title: "Claude Glance 设置",
-            size: NSSize(width: 488, height: isFirstLaunchSetup ? 442 : 412),
+            size: NSSize(width: 488, height: isFirstLaunchSetup ? 502 : 472),
             content: settingsView
         )
         window.isOpaque = true
