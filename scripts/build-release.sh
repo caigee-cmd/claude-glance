@@ -23,7 +23,9 @@ xcodebuild build \
   -scheme ClaudeDash \
   -configuration Release \
   -derivedDataPath "${DERIVED_DATA_DIR}-arm64" \
-  -destination 'platform=macOS,arch=arm64'
+  -destination 'platform=macOS' \
+  ARCHS=arm64 \
+  ONLY_ACTIVE_ARCH=YES
 
 echo "=== Building x86_64 ==="
 xcodebuild build \
@@ -31,7 +33,9 @@ xcodebuild build \
   -scheme ClaudeDash \
   -configuration Release \
   -derivedDataPath "${DERIVED_DATA_DIR}-x86_64" \
-  -destination 'platform=macOS,arch=x86_64'
+  -destination 'platform=macOS' \
+  ARCHS=x86_64 \
+  ONLY_ACTIVE_ARCH=YES
 
 ARM64_APP="${DERIVED_DATA_DIR}-arm64/Build/Products/Release/${APP_NAME}"
 X86_APP="${DERIVED_DATA_DIR}-x86_64/Build/Products/Release/${APP_NAME}"
@@ -53,6 +57,25 @@ merge_binary() {
   fi
 }
 
+verify_binary_arch() {
+  local binary_path="$1"
+  local expected_arch="$2"
+  local actual_archs
+
+  actual_archs="$(lipo -archs "${binary_path}" 2>/dev/null || true)"
+
+  if [[ " ${actual_archs} " != *" ${expected_arch} "* ]]; then
+    echo "Expected ${binary_path} to contain architecture ${expected_arch}, but got:" >&2
+    lipo -info "${binary_path}" >&2 || true
+    exit 1
+  fi
+}
+
+verify_binary_arch "${ARM64_APP}/Contents/MacOS/ClaudeGlance" arm64
+verify_binary_arch "${ARM64_APP}/Contents/Resources/ClaudeDashHelper" arm64
+verify_binary_arch "${X86_APP}/Contents/MacOS/ClaudeGlance" x86_64
+verify_binary_arch "${X86_APP}/Contents/Resources/ClaudeDashHelper" x86_64
+
 # Merge main executable
 merge_binary \
   "${X86_APP}/Contents/MacOS/ClaudeGlance" \
@@ -60,8 +83,8 @@ merge_binary \
 
 # Merge helper executable
 merge_binary \
-  "${X86_APP}/Contents/MacOS/ClaudeDashHelper" \
-  "${APP_DIST_PATH}/Contents/MacOS/ClaudeDashHelper"
+  "${X86_APP}/Contents/Resources/ClaudeDashHelper" \
+  "${APP_DIST_PATH}/Contents/Resources/ClaudeDashHelper"
 
 # Verify universal binary
 echo "=== Verifying universal binary ==="
