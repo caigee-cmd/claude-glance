@@ -5,10 +5,9 @@
 一个原生 macOS 菜单栏应用，用来查看 Claude Code 的本地活动、活跃会话和轻量统计。
 
 <p align="center">
-  <img src="docs/screenshots/mascots/mascot-runner.gif" width="96" alt="跑步挂件" />
-  <img src="docs/screenshots/mascots/mascot-hide.gif" width="96" alt="躲藏挂件" />
-  <img src="docs/screenshots/mascots/mascot-guitar.gif" width="96" alt="吉他挂件" />
-  <img src="docs/screenshots/mascots/mascot-balloons.gif" width="96" alt="气球挂件" />
+  <img src="docs/screenshots/mascots/cat_annimation21321.gif" width="96" alt="动态挂件" />
+  <img src="docs/screenshots/mascots/catanimation_simple.gif" width="96" alt="简单动态挂件" />
+  <img src="docs/screenshots/mascots/cat_guitar.gif" width="96" alt="吉他挂件" />
 </p>
 
 <p align="center"><sub>动态挂件，本地优先。</sub></p>

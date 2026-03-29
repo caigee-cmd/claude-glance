@@ -5,10 +5,9 @@
 A native macOS menu bar app for viewing local Claude Code activity, active sessions, and lightweight usage stats.
 
 <p align="center">
-  <img src="docs/screenshots/mascots/mascot-runner.gif" width="96" alt="Runner mascot" />
-  <img src="docs/screenshots/mascots/mascot-hide.gif" width="96" alt="Hide mascot" />
-  <img src="docs/screenshots/mascots/mascot-guitar.gif" width="96" alt="Guitar mascot" />
-  <img src="docs/screenshots/mascots/mascot-balloons.gif" width="96" alt="Balloons mascot" />
+  <img src="docs/screenshots/mascots/cat_annimation21321.gif" width="96" alt="Runner mascot" />
+  <img src="docs/screenshots/mascots/catanimation_simple.gif" width="96" alt="Hide mascot" />
+  <img src="docs/screenshots/mascots/cat_guitar.gif" width="96" alt="Guitar mascot" />
 </p>
 
 <p align="center"><sub>Animated mascots. Local-first.</sub></p>
