@@ -67,10 +67,22 @@ CREATE_DMG_CLI="${TOOLS_DIR}/node_modules/create-dmg/cli.js"
 NODE_VERSION="$("${NODE_BIN}" -p 'process.versions.node')"
 NODE_BASENAME="$(basename "$(cd "$(dirname "${NODE_BIN}")/.." && pwd)")"
 
+ensure_valid_release_app() {
+  if codesign --verify --deep --strict --verbose=4 "${APP_PATH}" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "Release app signature is invalid at ${APP_PATH}. Rebuilding release artifacts..."
+  "${SCRIPT_DIR}/build-release.sh"
+  codesign --verify --deep --strict --verbose=4 "${APP_PATH}"
+}
+
 if [[ ! -d "${APP_PATH}" ]]; then
   echo "Release app not found at ${APP_PATH}. Building release artifacts first..."
   "${SCRIPT_DIR}/build-release.sh"
 fi
+
+ensure_valid_release_app
 
 if ! command -v gm >/dev/null 2>&1; then
   echo "GraphicsMagick is required for a good-looking DMG icon." >&2

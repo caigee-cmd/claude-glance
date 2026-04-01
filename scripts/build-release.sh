@@ -71,6 +71,17 @@ verify_binary_arch() {
   fi
 }
 
+sign_dist_app() {
+  echo "=== Re-signing merged app bundle ==="
+  codesign --force --sign - --timestamp=none "${APP_DIST_PATH}/Contents/Resources/ClaudeDashHelper"
+  codesign --force --sign - --timestamp=none "${APP_DIST_PATH}"
+}
+
+verify_dist_app_signature() {
+  echo "=== Verifying app bundle signature ==="
+  codesign --verify --deep --strict --verbose=4 "${APP_DIST_PATH}"
+}
+
 verify_binary_arch "${ARM64_APP}/Contents/MacOS/ClaudeGlance" arm64
 verify_binary_arch "${ARM64_APP}/Contents/Resources/ClaudeDashHelper" arm64
 verify_binary_arch "${X86_APP}/Contents/MacOS/ClaudeGlance" x86_64
@@ -89,6 +100,9 @@ merge_binary \
 # Verify universal binary
 echo "=== Verifying universal binary ==="
 lipo -info "${APP_DIST_PATH}/Contents/MacOS/ClaudeGlance"
+
+sign_dist_app
+verify_dist_app_signature
 
 echo "=== Creating ZIP ==="
 ditto -c -k --sequesterRsrc --keepParent "${APP_DIST_PATH}" "${ZIP_PATH}"

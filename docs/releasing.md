@@ -35,6 +35,8 @@ chmod +x scripts/build-release.sh
 - 清理旧的 `dist/`
 - 以 `Release` 配置构建 `ClaudeGlance.app`
 - 复制 app 到 `dist/ClaudeGlance.app`
+- 在合并通用二进制后重新做 ad-hoc 签名
+- 在打包前用 `codesign --verify --deep --strict` 校验 app bundle
 - 生成 `dist/ClaudeGlance.zip`
 - 输出 zip 的 SHA-256 校验值
 - 基于 `create-dmg` 生成 DMG

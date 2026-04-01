@@ -434,6 +434,25 @@ final class ClaudeDashVisualsTests: XCTestCase {
         XCTAssertFalse(packageManifest.contains("url: \"https://github.com/airbnb/lottie-ios/releases/download"))
     }
 
+    func testBuildReleaseScriptReSignsMergedAppBundleBeforePackaging() throws {
+        let scriptURL = projectRootURL.appendingPathComponent("scripts/build-release.sh")
+        let script = try String(contentsOf: scriptURL)
+
+        XCTAssertTrue(script.contains("sign_dist_app()"))
+        XCTAssertTrue(script.contains("verify_dist_app_signature()"))
+        XCTAssertTrue(script.contains("sign_dist_app"))
+        XCTAssertTrue(script.contains("verify_dist_app_signature"))
+    }
+
+    func testBuildDMGScriptVerifiesReleaseAppSignatureBeforePackaging() throws {
+        let scriptURL = projectRootURL.appendingPathComponent("scripts/build-dmg.sh")
+        let script = try String(contentsOf: scriptURL)
+
+        XCTAssertTrue(script.contains("ensure_valid_release_app()"))
+        XCTAssertTrue(script.contains("codesign --verify --deep --strict --verbose=4"))
+        XCTAssertTrue(script.contains("build-release.sh"))
+    }
+
     func testFloatingPanelHoverHeaderAvoidsVerboseInstructionCopy() throws {
         let sourceURL = projectRootURL.appendingPathComponent("ClaudeDash/Sources/FloatingPanelView.swift")
         let source = try String(contentsOf: sourceURL)
