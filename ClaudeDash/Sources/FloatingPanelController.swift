@@ -313,7 +313,11 @@ final class FloatingPanelController {
     }
 
     private func constrainedOrigin(_ proposedOrigin: NSPoint, size: NSSize) -> NSPoint {
-        guard let visibleFrame = preferredVisibleFrame(for: proposedOrigin, size: size) else {
+        guard let visibleFrame = FloatingPanelLayout.preferredVisibleFrame(
+            for: proposedOrigin,
+            panelSize: size,
+            visibleFrames: NSScreen.screens.map(\.visibleFrame)
+        ) ?? NSScreen.main?.visibleFrame else {
             return proposedOrigin
         }
 
@@ -323,24 +327,5 @@ final class FloatingPanelController {
             visibleFrame: visibleFrame
         )
         return NSPoint(x: clamped.x, y: clamped.y)
-    }
-
-    private func preferredVisibleFrame(for proposedOrigin: NSPoint, size: NSSize) -> NSRect? {
-        let proposedFrame = NSRect(origin: proposedOrigin, size: size)
-        let screens = NSScreen.screens
-        guard !screens.isEmpty else { return nil }
-
-        let bestScreen = screens.max { lhs, rhs in
-            intersectionArea(of: lhs.visibleFrame, with: proposedFrame)
-                < intersectionArea(of: rhs.visibleFrame, with: proposedFrame)
-        }
-
-        return bestScreen?.visibleFrame ?? NSScreen.main?.visibleFrame
-    }
-
-    private func intersectionArea(of lhs: NSRect, with rhs: NSRect) -> CGFloat {
-        let intersection = lhs.intersection(rhs)
-        guard !intersection.isNull else { return 0 }
-        return intersection.width * intersection.height
     }
 }

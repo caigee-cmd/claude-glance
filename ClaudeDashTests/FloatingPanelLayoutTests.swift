@@ -142,4 +142,19 @@ final class FloatingPanelLayoutTests: XCTestCase {
         XCTAssertEqual(dragged.x, 1618, accuracy: 0.1)
         XCTAssertEqual(dragged.y, 980, accuracy: 0.1)
     }
+
+    func testPreferredVisibleFrameSwitchesToAdjacentDisplayDuringCrossScreenDrag() {
+        let leftDisplay = CGRect(x: 0, y: 50, width: 1710, height: 1022)
+        let rightDisplay = CGRect(x: 1710, y: 50, width: 1710, height: 1022)
+        let panelSize = CGSize(width: 92, height: 92)
+        let proposedOrigin = CGPoint(x: 1668, y: 700)
+
+        let preferred = FloatingPanelLayout.preferredVisibleFrame(
+            for: proposedOrigin,
+            panelSize: panelSize,
+            visibleFrames: [leftDisplay, rightDisplay]
+        )
+
+        XCTAssertEqual(preferred, rightDisplay)
+    }
 }

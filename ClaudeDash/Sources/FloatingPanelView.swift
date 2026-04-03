@@ -26,13 +26,24 @@ struct FloatingPanelMotionField {
     let hasLiveActivity: Bool
 
     init(time: Double, hasLiveActivity: Bool) {
+        self.hasLiveActivity = hasLiveActivity
+
+        guard hasLiveActivity else {
+            breathPhase = 0
+            flowProgress = 0
+            accentBlend = 0
+            rowLiftProgress = 0
+            dotHaloProgress = 0
+            idleTypingProgress = 0
+            return
+        }
+
         breathPhase = (sin(time * 0.9) + 1) / 2
         flowProgress = time * 0.16
         accentBlend = (sin(time * 0.45 + .pi / 3) + 1) / 2
         rowLiftProgress = (sin(time * 0.9 + .pi / 6) + 1) / 2
         dotHaloProgress = (sin(time * 0.9 + .pi / 2) + 1) / 2
         idleTypingProgress = time * 2.1
-        self.hasLiveActivity = hasLiveActivity
     }
 
     var wrappedFlowProgress: Double {

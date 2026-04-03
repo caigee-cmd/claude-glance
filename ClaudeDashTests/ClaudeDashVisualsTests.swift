@@ -734,6 +734,43 @@ final class ClaudeDashVisualsTests: XCTestCase {
         XCTAssertNil(TranscriptParserRules.userLineStatus(json))
     }
 
+    func testTranscriptParserRulesIgnoreToolResultBlockArrayForActivation() {
+        let json: [String: Any] = [
+            "type": "user",
+            "message": [
+                "role": "user",
+                "content": [
+                    [
+                        "type": "tool_result",
+                        "content": "done",
+                        "is_error": false,
+                    ],
+                ],
+            ],
+        ]
+
+        XCTAssertFalse(TranscriptParserRules.userLineShouldActivateSession(json))
+        XCTAssertNil(TranscriptParserRules.userLineStatus(json))
+    }
+
+    func testTranscriptParserRulesTreatTextBlockArrayPromptAsRunning() {
+        let json: [String: Any] = [
+            "type": "user",
+            "message": [
+                "role": "user",
+                "content": [
+                    [
+                        "type": "text",
+                        "text": "hi",
+                    ],
+                ],
+            ],
+        ]
+
+        XCTAssertTrue(TranscriptParserRules.userLineShouldActivateSession(json))
+        XCTAssertEqual(TranscriptParserRules.userLineStatus(json), .thinking)
+    }
+
     func testTranscriptParserRulesTreatAssistantThinkingAsRunning() {
         let json: [String: Any] = [
             "type": "assistant",
@@ -797,6 +834,17 @@ final class ClaudeDashVisualsTests: XCTestCase {
         XCTAssertEqual(FloatingPanelPlaybackRules.playbackSpeed(forTapCount: 0), 1.0, accuracy: 0.001)
         XCTAssertEqual(FloatingPanelPlaybackRules.playbackSpeed(forTapCount: 1), 1.35, accuracy: 0.001)
         XCTAssertEqual(FloatingPanelPlaybackRules.playbackSpeed(forTapCount: 10), 2.75, accuracy: 0.001)
+    }
+
+    func testFloatingPanelMotionFieldFreezesWhenPlaybackInactive() {
+        let field = FloatingPanelMotionField(time: 42, hasLiveActivity: false)
+
+        XCTAssertEqual(field.breathPhase, 0, accuracy: 0.001)
+        XCTAssertEqual(field.flowProgress, 0, accuracy: 0.001)
+        XCTAssertEqual(field.accentBlend, 0, accuracy: 0.001)
+        XCTAssertEqual(field.rowLiftProgress, 0, accuracy: 0.001)
+        XCTAssertEqual(field.dotHaloProgress, 0, accuracy: 0.001)
+        XCTAssertEqual(field.idleTypingStep, 0)
     }
 
     func testPlaybackRulesResetTapStreakAfterIdleGap() {

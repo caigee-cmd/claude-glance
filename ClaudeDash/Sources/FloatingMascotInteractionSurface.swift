@@ -74,12 +74,19 @@ final class FloatingMascotInteractionSurfaceView: NSView {
 
         guard didDrag else { return }
 
-        let visibleFrame = window.screen?.visibleFrame
+        let proposedOrigin = CGPoint(
+            x: initialWindowOrigin.x + translation.width,
+            y: initialWindowOrigin.y + translation.height
+        )
+        let visibleFrame = FloatingPanelLayout.preferredVisibleFrame(
+            for: proposedOrigin,
+            panelSize: window.frame.size,
+            visibleFrames: NSScreen.screens.map(\.visibleFrame)
+        ) ?? window.screen?.visibleFrame
             ?? NSScreen.main?.visibleFrame
             ?? CGRect(origin: .zero, size: window.frame.size)
-        let newOrigin = FloatingPanelLayout.draggedOrigin(
-            from: initialWindowOrigin,
-            dragTranslation: translation,
+        let newOrigin = FloatingPanelLayout.clampedOrigin(
+            for: proposedOrigin,
             panelSize: window.frame.size,
             visibleFrame: visibleFrame
         )

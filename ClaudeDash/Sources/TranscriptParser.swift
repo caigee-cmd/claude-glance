@@ -42,26 +42,11 @@ enum TranscriptParserRules {
             return false
         }
 
-        guard let message = json["message"] as? [String: Any],
-              let content = message["content"] as? String else {
-            return true
-        }
-
-        let lowered = content.lowercased()
-
-        if lowered.contains(clearCommandMarker) {
+        guard let message = json["message"] as? [String: Any] else {
             return false
         }
 
-        if lowered.contains(commandNameMarker) {
-            return false
-        }
-
-        if lowered.contains(localCommandStdoutMarker) || lowered.contains(localCommandStderrMarker) {
-            return false
-        }
-
-        return true
+        return contentShouldActivateSession(message["content"])
     }
 
     static func userLineStatus(_ json: [String: Any]) -> SessionStatus? {
@@ -71,6 +56,57 @@ enum TranscriptParserRules {
     static func systemLineShouldActivateSession(_ json: [String: Any]) -> Bool {
         let subtype = (json["subtype"] as? String)?.lowercased()
         return subtype != "local_command"
+    }
+
+    private static func contentShouldActivateSession(_ content: Any?) -> Bool {
+        switch content {
+        case let text as String:
+            return !containsPassiveCommandMarker(text)
+        case let block as [String: Any]:
+            return contentBlockShouldActivateSession(block)
+        case let blocks as [[String: Any]]:
+            return blocks.contains { contentBlockShouldActivateSession($0) }
+        case let items as [Any]:
+            return items.contains { contentShouldActivateSession($0) }
+        case nil:
+            return false
+        default:
+            return true
+        }
+    }
+
+    private static func contentBlockShouldActivateSession(_ block: [String: Any]) -> Bool {
+        let blockType = (block["type"] as? String)?.lowercased()
+
+        switch blockType {
+        case "tool_result":
+            return false
+        case "text":
+            return contentShouldActivateSession(block["text"])
+        default:
+            if let content = block["content"] {
+                return contentShouldActivateSession(content)
+            }
+            return true
+        }
+    }
+
+    private static func containsPassiveCommandMarker(_ text: String) -> Bool {
+        let lowered = text.lowercased()
+
+        if lowered.contains(clearCommandMarker) {
+            return true
+        }
+
+        if lowered.contains(commandNameMarker) {
+            return true
+        }
+
+        if lowered.contains(localCommandStdoutMarker) || lowered.contains(localCommandStderrMarker) {
+            return true
+        }
+
+        return false
     }
 
     static func assistantLineStatus(_ json: [String: Any]) -> SessionStatus? {

@@ -185,6 +185,26 @@ enum FloatingPanelLayout {
         )
     }
 
+    static func preferredVisibleFrame(
+        for proposedOrigin: CGPoint,
+        panelSize: CGSize,
+        visibleFrames: [CGRect]
+    ) -> CGRect? {
+        guard !visibleFrames.isEmpty else { return nil }
+
+        let proposedFrame = CGRect(origin: proposedOrigin, size: panelSize)
+        return visibleFrames.max { lhs, rhs in
+            let lhsArea = intersectionArea(of: lhs, with: proposedFrame)
+            let rhsArea = intersectionArea(of: rhs, with: proposedFrame)
+
+            if lhsArea == rhsArea {
+                return distanceSquared(from: lhs, to: proposedFrame) > distanceSquared(from: rhs, to: proposedFrame)
+            }
+
+            return lhsArea < rhsArea
+        }
+    }
+
     private static func taskListHeight(
         forVisibleRows rowCount: Int,
         headerHeight: CGFloat,
@@ -196,5 +216,17 @@ enum FloatingPanelLayout {
         let spacing = CGFloat(max(rowCount - 1, 0)) * rowSpacing
 
         return (panelContentPadding * 2) + headerHeight + (rows * rowHeight) + spacing + footerHeight
+    }
+
+    private static func intersectionArea(of lhs: CGRect, with rhs: CGRect) -> CGFloat {
+        let intersection = lhs.intersection(rhs)
+        guard !intersection.isNull else { return 0 }
+        return intersection.width * intersection.height
+    }
+
+    private static func distanceSquared(from visibleFrame: CGRect, to proposedFrame: CGRect) -> CGFloat {
+        let dx = visibleFrame.midX - proposedFrame.midX
+        let dy = visibleFrame.midY - proposedFrame.midY
+        return (dx * dx) + (dy * dy)
     }
 }
