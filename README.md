@@ -8,9 +8,11 @@ Claude Glance passively reads local transcript data under `~/.claude/projects/` 
 
 ## Demo
 
-[Watch the product demo (MP4)](docs/screenshots/claude-glance-demo.mp4)
+[![Watch the product demo](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/menupannel.png)](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/claude-glance-demo.mp4)
 
 A short walkthrough of the menu bar overview, daily stats, and mascot settings.
+
+GitHub README does not reliably support inline MP4 playback, so the preview image above links to the demo video directly.
 
 ## Highlights
 
@@ -27,13 +29,7 @@ A short walkthrough of the menu bar overview, daily stats, and mascot settings.
 
 Quick glance at today's stats, active sessions, and recent completions from the menu bar.
 
-![Menu bar popover](docs/screenshots/menupannel.png)
-
-### Stats Window
-
-The larger stats view is the best "first screenshot" for explaining the product at a glance.
-
-![Stats window](docs/screenshots/stastic.png)
+![Menu bar popover](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/menupannel.png)
 
 ### Mascot Settings
 
@@ -41,8 +37,8 @@ Two settings states that show how the floating mascot can be configured without 
 
 <table>
   <tr>
-    <td width="50%"><img src="docs/screenshots/settingpannel-cat-floting.png" alt="Floating mascot settings" /></td>
-    <td width="50%"><img src="docs/screenshots/settingpannel-cat-play-guitart.png" alt="Guitar mascot settings" /></td>
+    <td width="50%"><img src="https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/settingpannel-cat-floting.png" alt="Floating mascot settings" /></td>
+    <td width="50%"><img src="https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/settingpannel-cat-play-guitart.png" alt="Guitar mascot settings" /></td>
   </tr>
   <tr>
     <td align="center"><sub>Floating mascot preset</sub></td>
