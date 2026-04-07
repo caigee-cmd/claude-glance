@@ -1,0 +1,53 @@
+# Xcode build artifacts
+.derivedData/
+.build/
+.swift-module-cache/
+build/
+DerivedData/
+dist/
+default.profraw
+*.profraw
+*.xcresult
+*.xcactivitylog
+
+# Xcode user-specific files
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/.DS_Store
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+
+# Dependencies
+.swiftpm/
+.tools/
+Vendor/lottie-spm/.git/
+
+# Local scratch files
+*~
+Sweet run cycle.json
+
+# Internal planning / design exploration
+docs/superpowers/
+
+# Local screenshot/media sources; README uses hosted assets
+docs/screenshots/*.mp4
+docs/screenshots/*.gif
+docs/screenshots/*.png
+docs/screenshots/*.jpg
+docs/screenshots/*.jpeg
+docs/screenshots/*.webp
+
+# Regenerated vendor archives
+Vendor/LottieBinary/*.zip
+Vendor/LottieBinary/part.*
+
+Vendor/lottie-spm/.git.localbak/
+Distribute/
