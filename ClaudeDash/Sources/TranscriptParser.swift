@@ -150,6 +150,12 @@ final class TranscriptParser: ObservableObject, @unchecked Sendable {
     private var statusValue: SessionStatus = .unknown
     private var toolValue: ToolType = .unknown
     private var tokenUsageValue: Double = 0.0
+    private var format: TranscriptFormat = .claude
+
+    private enum TranscriptFormat {
+        case claude
+        case kimi
+    }
 
     init(filePath: String) {
         self.filePath = filePath
@@ -191,15 +197,94 @@ final class TranscriptParser: ObservableObject, @unchecked Sendable {
         guard let data = line.data(using: .utf8),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
 
-        let lineType = json["type"] as? String ?? ""
+        // Auto-detect Kimi CLI format on metadata line
+        if format == .claude {
+            if json["protocol_version"] != nil {
+                format = .kimi
+                return // skip metadata line
+            }
+        }
 
-        switch lineType {
-        case "assistant":
-            parseAssistantLine(json)
-        case "user":
-            parseUserLine(json)
-        case "progress":
-            parseProgressLine(json)
+        switch format {
+        case .kimi:
+            parseKimiLine(json)
+        case .claude:
+            let lineType = json["type"] as? String ?? ""
+            switch lineType {
+            case "assistant":
+                parseAssistantLine(json)
+            case "user":
+                parseUserLine(json)
+            case "progress":
+                parseProgressLine(json)
+            default:
+                break
+            }
+        }
+    }
+
+    private func parseKimiLine(_ json: [String: Any]) {
+        guard let message = json["message"] as? [String: Any] else { return }
+        let messageType = message["type"] as? String ?? ""
+        let payload = message["payload"] as? [String: Any] ?? [:]
+
+        switch messageType {
+        case "TurnBegin", "StepBegin":
+            statusValue = .thinking
+            toolValue = .unknown
+
+        case "ContentPart":
+            let partType = payload["type"] as? String ?? ""
+            if partType == "think" || partType == "text" {
+                statusValue = .thinking
+            }
+
+            // Extract summary text for messages
+            if partType == "text" || partType == "think" {
+                let text = payload["text"] as? String
+                    ?? payload["think"] as? String
+                    ?? ""
+                if !text.isEmpty {
+                    appendMessage(TranscriptMessage(role: "assistant", content: String(text.prefix(200))))
+                }
+            }
+
+        case "ToolCall":
+            statusValue = .toolRunning
+            if let function = payload["function"] as? [String: Any],
+               let toolName = function["name"] as? String {
+                toolValue = mapToolName(toolName)
+                appendMessage(TranscriptMessage(role: "assistant", content: "[\(toolName)]", toolName: toolName))
+            } else if let name = payload["name"] as? String {
+                toolValue = mapToolName(name)
+                appendMessage(TranscriptMessage(role: "assistant", content: "[\(name)]", toolName: name))
+            }
+
+        case "ToolCallPart":
+            // Incremental tool call arguments; ignore for state
+            break
+
+        case "ToolResult":
+            statusValue = .thinking
+            // Keep tool value until next explicit state change
+
+        case "TurnEnd":
+            statusValue = .completed
+            toolValue = .unknown
+
+        case "StatusUpdate":
+            if let contextTokens = payload["context_tokens"] as? Int,
+               let maxContextTokens = payload["max_context_tokens"] as? Int,
+               maxContextTokens > 0 {
+                tokenUsageValue = min(1.0, Double(contextTokens) / Double(maxContextTokens))
+            } else if let tokenUsage = payload["token_usage"] as? [String: Any] {
+                var total = 0
+                if let input = tokenUsage["input_other"] as? Int { total += input }
+                if let output = tokenUsage["output"] as? Int { total += output }
+                if let cacheRead = tokenUsage["input_cache_read"] as? Int { total += cacheRead }
+                tokenUsageValue = min(1.0, Double(total) / maxContextTokens)
+            }
+
         default:
             break
         }

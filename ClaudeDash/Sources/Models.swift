@@ -4,6 +4,7 @@
 
 import CoreGraphics
 import Foundation
+import SwiftUI
 
 enum ClaudeDashDefaults {
     static let suiteName = "com.claudedash.shared"
@@ -52,6 +53,69 @@ enum FloatingMascotPreferences {
 
     static func markSetupCompleted(defaults: UserDefaults = ClaudeDashDefaults.shared) {
         defaults.set(true, forKey: didCompleteSetupUserDefaultsKey)
+    }
+}
+
+/// Session 数据来源（历史扫描用）
+enum SessionSource: String, Codable, Sendable {
+    case claude
+    case kimi
+
+    /// 来源品牌色
+    var brandColor: Color {
+        switch self {
+        case .claude: return .claudePurple
+        case .kimi: return .kimiCyan
+        }
+    }
+
+    /// 来源图标（SF Symbol）
+    var iconName: String {
+        switch self {
+        case .claude: return "bubble.left.fill"
+        case .kimi: return "sparkles"
+        }
+    }
+
+    /// 来源显示名
+    var displayName: String {
+        switch self {
+        case .claude: return "Claude"
+        case .kimi: return "Kimi"
+        }
+    }
+}
+
+/// 统计数据面板筛选器
+enum StatsDataSource: String, CaseIterable, Identifiable, Sendable {
+    case all
+    case claude
+    case kimi
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .all: return "全部"
+        case .claude: return "Claude"
+        case .kimi: return "Kimi"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .all: return "square.grid.2x2"
+        case .claude: return "bubble.left.fill"
+        case .kimi: return "sparkles"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .all: return .secondary
+        case .claude: return .claudePurple
+        case .kimi: return .kimiCyan
+        }
     }
 }
 
@@ -427,8 +491,9 @@ struct ActiveSession: Identifiable {
     var currentTool: ToolType
     var tokenUsage: Double  // 0.0 - 1.0 比例
     var startTime: Date
+    var source: SessionSource
 
-    init(project: String, transcriptPath: String) {
+    init(project: String, transcriptPath: String, source: SessionSource = .claude) {
         self.id = transcriptPath
         self.project = project
         self.transcriptPath = transcriptPath
@@ -437,6 +502,7 @@ struct ActiveSession: Identifiable {
         self.currentTool = .unknown
         self.tokenUsage = 0.0
         self.startTime = Date()
+        self.source = source
     }
 }
 

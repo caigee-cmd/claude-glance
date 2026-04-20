@@ -629,6 +629,9 @@ struct ActiveSessionRow: View {
 
             VStack(alignment: .leading, spacing: 4) {
                 HStack(spacing: 6) {
+                    Image(systemName: session.source.iconName)
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(session.source.brandColor)
                     Text(session.project)
                         .font(PopoverPanelStyle.rowTitleFont)
                         .lineLimit(1)

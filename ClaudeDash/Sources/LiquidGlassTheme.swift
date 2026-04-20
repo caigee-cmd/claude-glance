@@ -11,6 +11,8 @@ extension Color {
     static let claudePurple = Color(red: 124 / 255, green: 58 / 255, blue: 237 / 255)
     /// Claude 青 #22D3EE
     static let claudeCyan = Color(red: 34 / 255, green: 211 / 255, blue: 238 / 255)
+    /// Kimi 蓝 #0EA5E9
+    static let kimiCyan = Color(red: 14 / 255, green: 165 / 255, blue: 233 / 255)
     /// 警告橙 #F97316
     static let claudeWarningOrange = Color(red: 249 / 255, green: 115 / 255, blue: 22 / 255)
     /// 警告红 #EF4444

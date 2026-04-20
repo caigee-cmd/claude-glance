@@ -113,7 +113,12 @@ struct SessionTimelineView: View {
         if costRatio > 0.5 {
             return LinearGradient(colors: [.claudeWarningOrange, .claudeWarningRed], startPoint: .leading, endPoint: .trailing)
         }
-        return LinearGradient(colors: [.claudePurple, .claudeCyan], startPoint: .leading, endPoint: .trailing)
+        switch session.source {
+        case .kimi:
+            return LinearGradient(colors: [.kimiCyan.opacity(0.8), .kimiCyan.opacity(0.4)], startPoint: .leading, endPoint: .trailing)
+        case .claude:
+            return LinearGradient(colors: [.claudePurple, .claudeCyan], startPoint: .leading, endPoint: .trailing)
+        }
     }
 
     private var emptyTimeline: some View {

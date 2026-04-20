@@ -1,14 +1,14 @@
-# Claude Glance
+# Claude Petty
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 A native macOS menu bar app for viewing local Claude Code activity, active sessions, and lightweight usage stats.
 
-Claude Glance passively reads local transcript data under `~/.claude/projects/` and surfaces recent activity, active sessions, and lightweight stats.
+Claude Petty passively reads local transcript data under `~/.claude/projects/` and surfaces recent activity, active sessions, and lightweight stats.
 
 ## Demo
 
-![Claude Glance demo](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/claude-glance-demo.gif)
+![Claude Petty demo](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/claude-glance-demo.gif)
 
 A short walkthrough of the menu bar overview, daily stats, and mascot settings.
 
@@ -83,7 +83,7 @@ xcodegen generate
 
 ## Privacy
 
-Claude Glance runs locally by default.
+Claude Petty runs locally by default.
 
 | Item | Behavior |
 | --- | --- |

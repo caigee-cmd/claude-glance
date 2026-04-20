@@ -1,14 +1,14 @@
-# Claude Glance
+# Claude Petty
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
 一个原生 macOS 菜单栏应用，用来查看 Claude Code 的本地活动、活跃会话和轻量统计。
 
-Claude Glance 默认以被动读取方式工作：扫描 `~/.claude/projects/` 下的本地 transcript 数据，展示最近活动、活跃 session 和轻量统计。
+Claude Petty 默认以被动读取方式工作：扫描 `~/.claude/projects/` 下的本地 transcript 数据，展示最近活动、活跃 session 和轻量统计。
 
 ## 演示视频
 
-![Claude Glance 演示](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/claude-glance-demo.gif)
+![Claude Petty 演示](https://claude-glance-1390058464.cos.ap-singapore.myqcloud.com/claude-glance-demo.gif)
 
 快速看一遍菜单栏概览、统计面板和挂件设置。
 
@@ -83,7 +83,7 @@ xcodegen generate
 
 ## 隐私
 
-Claude Glance 默认只在本地运行。
+Claude Petty 默认只在本地运行。
 
 | 项目 | 当前行为 |
 | --- | --- |

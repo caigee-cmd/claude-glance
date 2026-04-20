@@ -5,6 +5,7 @@
 import Foundation
 import Combine
 import Darwin
+import CryptoKit
 
 struct SessionDirectoryScanFile: Equatable, Sendable {
     let path: String
@@ -87,6 +88,8 @@ final class SessionMonitor: ObservableObject {
     private var completedTimestamps: [String: Date] = [:]
     private let projectsBaseURL = FileManager.default.homeDirectoryForCurrentUser
         .appendingPathComponent(".claude/projects", isDirectory: true)
+    private let kimiBaseURL = FileManager.default.homeDirectoryForCurrentUser
+        .appendingPathComponent(".kimi/sessions", isDirectory: true)
 
     private var reconcileTimer: Timer?
     private var trackedFiles: [String: TrackedFile] = [:]
@@ -157,7 +160,7 @@ final class SessionMonitor: ObservableObject {
 
     private func performReconcile() {
         refreshDirectoryMonitoring()
-        scanProjectsDirectory()
+        scanAllDirectories()
         removeStaleCompletedSessions()
     }
 
@@ -173,29 +176,168 @@ final class SessionMonitor: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + rescanDebounce, execute: workItem)
     }
 
-    private func scanProjectsDirectory() {
+    private func scanAllDirectories() {
         guard !isScanInFlight else { return }
         isScanInFlight = true
 
         let trackedSnapshot = trackedFiles.mapValues(\.isActive)
-        let baseDir = projectsBaseURL.path
+        let claudeBaseDir = projectsBaseURL.path
+        let kimiBaseDir = kimiBaseURL.path
         let activeThreshold = activeThreshold
         let completionThreshold = completionThreshold
 
         scanQueue.async { [weak self] in
-            let result = SessionDirectoryScanner.scan(
-                baseDir: baseDir,
+            var allActiveFiles: [SessionDirectoryScanFile] = []
+            var allCompletedPaths = Set<String>()
+
+            // Scan Claude Code directory
+            let claudeResult = SessionDirectoryScanner.scan(
+                baseDir: claudeBaseDir,
                 trackedActivity: trackedSnapshot,
                 activeThreshold: activeThreshold,
                 completionThreshold: completionThreshold
+            )
+            allActiveFiles.append(contentsOf: claudeResult.activeFiles)
+            allCompletedPaths.formUnion(claudeResult.completedPaths)
+
+            // Scan Kimi CLI directory
+            let kimiResult = Self.scanKimiDirectory(
+                baseDir: kimiBaseDir,
+                trackedSnapshot: trackedSnapshot,
+                activeThreshold: activeThreshold,
+                completionThreshold: completionThreshold
+            )
+            allActiveFiles.append(contentsOf: kimiResult.activeFiles)
+            allCompletedPaths.formUnion(kimiResult.completedPaths)
+
+            let mergedResult = SessionDirectoryScanResult(
+                activeFiles: allActiveFiles.sorted { $0.lastModified > $1.lastModified },
+                completedPaths: allCompletedPaths.sorted()
             )
 
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.isScanInFlight = false
-                self.applyScanResult(result)
+                self.applyScanResult(mergedResult)
             }
         }
+    }
+
+    private nonisolated static func scanKimiDirectory(
+        baseDir: String,
+        trackedSnapshot: [String: Bool],
+        activeThreshold: TimeInterval,
+        completionThreshold: TimeInterval,
+        now: Date = Date()
+    ) -> SessionDirectoryScanResult {
+        let fileManager = FileManager.default
+        var activeFiles: [SessionDirectoryScanFile] = []
+        var completedPaths = Set<String>()
+
+        guard fileManager.fileExists(atPath: baseDir),
+              let hashDirs = try? fileManager.contentsOfDirectory(atPath: baseDir) else {
+            return SessionDirectoryScanResult(activeFiles: [], completedPaths: [])
+        }
+
+        let workDirMap = loadKimiWorkDirMap()
+
+        for hashDir in hashDirs {
+            let hashPath = (baseDir as NSString).appendingPathComponent(hashDir)
+            var isDirectory: ObjCBool = false
+            guard fileManager.fileExists(atPath: hashPath, isDirectory: &isDirectory),
+                  isDirectory.boolValue,
+                  let uuidDirs = try? fileManager.contentsOfDirectory(atPath: hashPath) else {
+                continue
+            }
+
+            var hashSessions: [(path: String, modDate: Date, projectName: String)] = []
+
+            for uuidDir in uuidDirs {
+                let uuidPath = (hashPath as NSString).appendingPathComponent(uuidDir)
+                guard fileManager.fileExists(atPath: uuidPath, isDirectory: &isDirectory),
+                      isDirectory.boolValue else { continue }
+
+                let wirePath = (uuidPath as NSString).appendingPathComponent("wire.jsonl")
+                guard fileManager.fileExists(atPath: wirePath),
+                      let attrs = try? fileManager.attributesOfItem(atPath: wirePath),
+                      let modDate = attrs[.modificationDate] as? Date else {
+                    continue
+                }
+
+                let age = now.timeIntervalSince(modDate)
+                if age < activeThreshold {
+                    let workDir = workDirMap[hashDir]
+                    let workDirName = workDir.map { URL(fileURLWithPath: $0).lastPathComponent }
+                    let stateTitle = projectNameFromKimiState(at: wirePath)
+                    let projectName = workDirName ?? stateTitle ?? hashDir
+                    hashSessions.append((wirePath, modDate, projectName))
+                } else if trackedSnapshot[wirePath] == true,
+                          age > completionThreshold {
+                    completedPaths.insert(wirePath)
+                }
+            }
+
+            // Keep only the most recent active session per work directory (hash).
+            // Older ones from the same directory are marked completed to avoid
+            // duplicate floating panels for the same project.
+            if let mostRecent = hashSessions.max(by: { $0.modDate < $1.modDate }) {
+                activeFiles.append(SessionDirectoryScanFile(
+                    path: mostRecent.path,
+                    projectName: mostRecent.projectName,
+                    lastModified: mostRecent.modDate
+                ))
+                for session in hashSessions where session.path != mostRecent.path {
+                    if trackedSnapshot[session.path] == true {
+                        completedPaths.insert(session.path)
+                    }
+                }
+            }
+        }
+
+        return SessionDirectoryScanResult(
+            activeFiles: activeFiles,
+            completedPaths: completedPaths.sorted()
+        )
+    }
+
+    private nonisolated static func loadKimiWorkDirMap() -> [String: String] {
+        let kimiConfigPath = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".kimi/kimi.json").path
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: kimiConfigPath)),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let workDirs = json["work_dirs"] as? [[String: Any]] else {
+            return [:]
+        }
+        var map: [String: String] = [:]
+        for entry in workDirs {
+            if let path = entry["path"] as? String {
+                let hash = md5Hash(of: path)
+                map[hash] = path
+            }
+        }
+        return map
+    }
+
+    private nonisolated static func md5Hash(of string: String) -> String {
+        let data = Data(string.utf8)
+        let digest = Insecure.MD5.hash(data: data)
+        return digest.map { String(format: "%02x", $0) }.joined()
+    }
+
+    private nonisolated static func projectNameFromKimiState(at wirePath: String) -> String? {
+        let statePath = URL(fileURLWithPath: wirePath)
+            .deletingLastPathComponent()
+            .appendingPathComponent("state.json")
+            .path
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: statePath)),
+              let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+        if let title = json["custom_title"] as? String, !title.isEmpty,
+           title != "hi" {
+            return title
+        }
+        return nil
     }
 
     private func applyScanResult(_ result: SessionDirectoryScanResult) {
@@ -390,10 +532,17 @@ final class SessionMonitor: ObservableObject {
         // When a new transcript appears in the same project directory,
         // mark older sessions from that directory as completed.
         // This handles /clear which creates a new file without writing Stop to the old one.
+        // For Kimi CLI, "same project" means same work directory (hash).
         let newDir = (path as NSString).deletingLastPathComponent
+        let newProjectDir = Self.isKimiPath(path)
+            ? (newDir as NSString).deletingLastPathComponent
+            : newDir
         for existing in activeSessions where existing.id != path {
             let existingDir = (existing.transcriptPath as NSString).deletingLastPathComponent
-            if existingDir == newDir,
+            let existingProjectDir = Self.isKimiPath(existing.transcriptPath)
+                ? (existingDir as NSString).deletingLastPathComponent
+                : existingDir
+            if existingProjectDir == newProjectDir,
                existing.status != .completed,
                let existingMod = trackedFiles[existing.id]?.lastModified,
                existingMod <= tracked.lastModified {
@@ -412,7 +561,8 @@ final class SessionMonitor: ObservableObject {
         parsers[path] = parser
         startWatchingTranscriptFile(at: path)
 
-        let session = ActiveSession(project: tracked.projectName, transcriptPath: path)
+        let source: SessionSource = Self.isKimiPath(path) ? .kimi : .claude
+        let session = ActiveSession(project: tracked.projectName, transcriptPath: path, source: source)
         var subscriptions = Set<AnyCancellable>()
 
         parser.$lastMessages
@@ -498,6 +648,10 @@ final class SessionMonitor: ObservableObject {
     private func removeOldestSession() {
         guard let oldest = activeSessions.min(by: { $0.startTime < $1.startTime }) else { return }
         removeSession(path: oldest.transcriptPath)
+    }
+
+    private static func isKimiPath(_ path: String) -> Bool {
+        path.contains(".kimi/sessions")
     }
 
     private func cancelRootDirectoryWatcher() {

@@ -568,6 +568,12 @@ final class StatsManager: ObservableObject {
     @Published var todayMessageCount: Int = 0
     @Published var todayToolDistribution: [String: Int] = [:]
     @Published var dailyCostBudget: Double = 0
+    @Published var selectedSource: StatsDataSource = .all {
+        didSet {
+            guard oldValue != selectedSource else { return }
+            recalculate()
+        }
+    }
 
     // MARK: - 私有属性
 
@@ -578,6 +584,9 @@ final class StatsManager: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
+
+    /// 所有扫描到的 session（未过滤，包含 Claude + Kimi）
+    private var allSessions: [ScannedSession] = []
 
     private var cachedHeatmapDailyCounts: [String: Int] = [:]
     private var cachedAllSessions: [ScannedSession] = []
@@ -633,7 +642,15 @@ final class StatsManager: ObservableObject {
     }
 
     private func apply(_ snapshot: StatsScanSnapshot) {
-        cachedAllSessions = snapshot.sessions
+        allSessions = snapshot.sessions
+        recalculate()
+    }
+
+    private func recalculate() {
+        let filtered = filterSessions(allSessions, by: selectedSource)
+        let snapshot = StatsComputation.scanSnapshot(from: filtered)
+
+        cachedAllSessions = filtered
         cachedRangeSnapshots.removeAll()
 
         let todayKey = dateFormatter.string(from: Date())
@@ -647,6 +664,17 @@ final class StatsManager: ObservableObject {
         history = Array(historySummaries.suffix(30))
 
         applyDerivedCache(snapshot.derived)
+    }
+
+    private func filterSessions(_ sessions: [ScannedSession], by source: StatsDataSource) -> [ScannedSession] {
+        switch source {
+        case .all:
+            return sessions
+        case .claude:
+            return sessions.filter { $0.source == .claude }
+        case .kimi:
+            return sessions.filter { $0.source == .kimi }
+        }
     }
 
     private func applyTodaySummary(_ summary: DailySummary) {

@@ -45,7 +45,7 @@ final class HistoryScannerCacheTests: XCTestCase {
         let originalDate = try XCTUnwrap(originalAttributes[.modificationDate] as? Date)
         let originalSize = try XCTUnwrap(originalAttributes[.size] as? NSNumber)
 
-        let firstScan = HistoryScanner.scanAll(in: tempDir.appendingPathComponent(".claude/projects"), cacheFileURL: cacheURL)
+        let firstScan = HistoryScanner.scanAll(claudeBaseDir: tempDir.appendingPathComponent(".claude/projects"), kimiBaseDir: URL(fileURLWithPath: "/dev/null"), cacheFileURL: cacheURL)
         XCTAssertEqual(firstScan.count, 1)
         XCTAssertEqual(firstScan.first?.toolUseCount, 1)
 
@@ -53,7 +53,7 @@ final class HistoryScannerCacheTests: XCTestCase {
         try invalidContent.write(to: transcriptURL, atomically: true, encoding: .utf8)
         try FileManager.default.setAttributes([.modificationDate: originalDate], ofItemAtPath: transcriptURL.path)
 
-        let secondScan = HistoryScanner.scanAll(in: tempDir.appendingPathComponent(".claude/projects"), cacheFileURL: cacheURL)
+        let secondScan = HistoryScanner.scanAll(claudeBaseDir: tempDir.appendingPathComponent(".claude/projects"), kimiBaseDir: URL(fileURLWithPath: "/dev/null"), cacheFileURL: cacheURL)
         XCTAssertEqual(secondScan.count, 1)
         XCTAssertEqual(secondScan.first?.toolUseCount, 1)
         XCTAssertTrue(FileManager.default.fileExists(atPath: cacheURL.path))
@@ -79,12 +79,12 @@ final class HistoryScannerCacheTests: XCTestCase {
         """
 
         try firstContent.write(to: transcriptURL, atomically: true, encoding: .utf8)
-        _ = HistoryScanner.scanAll(in: tempDir.appendingPathComponent(".claude/projects"), cacheFileURL: cacheURL)
+        _ = HistoryScanner.scanAll(claudeBaseDir: tempDir.appendingPathComponent(".claude/projects"), kimiBaseDir: URL(fileURLWithPath: "/dev/null"), cacheFileURL: cacheURL)
 
         Thread.sleep(forTimeInterval: 1.1)
         try secondContent.write(to: transcriptURL, atomically: true, encoding: .utf8)
 
-        let refreshedScan = HistoryScanner.scanAll(in: tempDir.appendingPathComponent(".claude/projects"), cacheFileURL: cacheURL)
+        let refreshedScan = HistoryScanner.scanAll(claudeBaseDir: tempDir.appendingPathComponent(".claude/projects"), kimiBaseDir: URL(fileURLWithPath: "/dev/null"), cacheFileURL: cacheURL)
         XCTAssertEqual(refreshedScan.count, 1)
         XCTAssertEqual(refreshedScan.first?.toolUseCount, 1)
     }

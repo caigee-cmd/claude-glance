@@ -154,9 +154,14 @@ struct SessionRow: View {
                 .frame(width: 8, height: 8)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(session.project)
-                    .font(.body)
-                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Image(systemName: session.source.iconName)
+                        .font(.caption2)
+                        .foregroundStyle(session.source.brandColor)
+                    Text(session.project)
+                        .font(.body)
+                        .lineLimit(1)
+                }
                 Text(session.status.rawValue)
                     .font(.caption)
                     .foregroundStyle(.secondary)
