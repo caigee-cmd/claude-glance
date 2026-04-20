@@ -136,15 +136,7 @@ struct StatsDetailView: View {
             Spacer()
 
             HStack(spacing: 8) {
-                Picker("", selection: $statsManager.selectedSource) {
-                    ForEach(StatsDataSource.allCases) { source in
-                        Image(systemName: source.iconName)
-                            .help(source.title)
-                            .tag(source)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .frame(width: 120)
+                SourceFilterBar(selection: $statsManager.selectedSource)
 
                 miniStat(icon: "sum", label: "Sessions", value: "\(statsManager.totalCompletionsAllTime)")
                 miniStat(icon: ClaudeDashSymbols.totalCost, label: "Cost", value: statsManager.totalCostAllTime.usdFormatted)

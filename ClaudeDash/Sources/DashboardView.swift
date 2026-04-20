@@ -16,14 +16,7 @@ struct DashboardView: View {
             // 顶部来源切换器
             HStack {
                 Spacer()
-                Picker("数据来源", selection: $statsManager.selectedSource) {
-                    ForEach(StatsDataSource.allCases) { source in
-                        Label(source.title, systemImage: source.iconName)
-                            .tag(source)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .frame(width: 260)
+                SourceFilterBar(selection: $statsManager.selectedSource)
                 Spacer()
             }
             .padding(.horizontal)
