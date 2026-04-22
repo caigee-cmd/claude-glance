@@ -109,9 +109,14 @@ fi
   --overwrite \
   --no-code-sign \
   --dmg-title="${DMG_TITLE}" \
-  --dmg-name="ClaudePetty" \
   "${APP_PATH}" \
   "${DIST_DIR}"
+
+# create-dmg ignores --dmg-name; rename to fixed name
+generated_dmg=$(ls -1 "${DIST_DIR}"/*.dmg | head -n 1)
+if [[ -f "${generated_dmg}" ]]; then
+  mv "${generated_dmg}" "${DIST_DIR}/ClaudePetty.dmg"
+fi
 
 echo
 echo "DMG artifact:"
