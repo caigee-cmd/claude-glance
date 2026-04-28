@@ -218,48 +218,29 @@ struct FloatingPanelView: View {
         interactionModel.displayMode != .compact
     }
 
+    private var shouldAnimateMotion: Bool {
+        interactionModel.shouldAnimateMotion && hasLiveActivity
+    }
+
     var body: some View {
         GeometryReader { proxy in
-            TimelineView(.animation(minimumInterval: 1.0 / (hasLiveActivity ? FloatingPanelTransition.targetFPS : FloatingPanelTransition.idleFPS))) { context in
-                let time = context.date.timeIntervalSinceReferenceDate
-                let field = FloatingPanelMotionField(time: time, hasLiveActivity: hasLiveActivity)
-                let hostSize = proxy.size
-                let previewSurfaceHeight = FloatingPanelLayout.previewSurfaceHeight(
-                    forVisibleRows: visibleSessions.count,
-                    isIdle: visibleSessions.isEmpty
-                )
-                let previewOffsetY = FloatingPanelLayout.previewSurfaceVerticalOffset(
-                    hostHeight: hostSize.height,
-                    surfaceHeight: previewSurfaceHeight
-                )
-                let canShowTaskList = showsTaskList
-                    && hostSize.width > compactIslandSize.width
-
-                ZStack(alignment: .topTrailing) {
-                    Group {
-                        if canShowTaskList {
-                            taskListPanel(now: context.date, field: field, hostSize: hostSize)
-                                .offset(
-                                    x: -(compactIslandSize.width + FloatingPanelLayout.previewPanelGap),
-                                    y: interactionModel.displayMode == .hoverList ? previewOffsetY : 6
-                                )
-                                .transition(
-                                    .asymmetric(
-                                        insertion: .opacity.combined(with: .scale(scale: 0.94, anchor: .trailing)),
-                                        removal: .opacity
-                                    )
-                                )
-                                .zIndex(0)
-                        }
-                    }
-                    .animation(FloatingPanelTransition.swiftUIAnimation, value: interactionModel.displayMode)
-
-                    mascotIsland(field: field)
-                        .zIndex(1)
+            if shouldAnimateMotion {
+                TimelineView(.animation(minimumInterval: 1.0 / FloatingPanelTransition.targetFPS)) { context in
+                    panelContent(
+                        hostSize: proxy.size,
+                        now: context.date,
+                        field: FloatingPanelMotionField(
+                            time: context.date.timeIntervalSinceReferenceDate,
+                            hasLiveActivity: true
+                        )
+                    )
                 }
-                .frame(width: hostSize.width, height: hostSize.height, alignment: .topTrailing)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                .contentShape(Rectangle())
+            } else {
+                panelContent(
+                    hostSize: proxy.size,
+                    now: Date(),
+                    field: FloatingPanelMotionField(time: 0, hasLiveActivity: false)
+                )
             }
         }
         .contextMenu {
@@ -273,6 +254,49 @@ struct FloatingPanelView: View {
                 NotificationCenter.default.post(name: .hideFloatingPanel, object: nil)
             }
         }
+    }
+
+    private func panelContent(
+        hostSize: CGSize,
+        now: Date,
+        field: FloatingPanelMotionField
+    ) -> some View {
+        let previewSurfaceHeight = FloatingPanelLayout.previewSurfaceHeight(
+            forVisibleRows: visibleSessions.count,
+            isIdle: visibleSessions.isEmpty
+        )
+        let previewOffsetY = FloatingPanelLayout.previewSurfaceVerticalOffset(
+            hostHeight: hostSize.height,
+            surfaceHeight: previewSurfaceHeight
+        )
+        let canShowTaskList = showsTaskList
+            && hostSize.width > compactIslandSize.width
+
+        return ZStack(alignment: .topTrailing) {
+            Group {
+                if canShowTaskList {
+                    taskListPanel(now: now, field: field, hostSize: hostSize)
+                        .offset(
+                            x: -(compactIslandSize.width + FloatingPanelLayout.previewPanelGap),
+                            y: interactionModel.displayMode == .hoverList ? previewOffsetY : 6
+                        )
+                        .transition(
+                            .asymmetric(
+                                insertion: .opacity.combined(with: .scale(scale: 0.94, anchor: .trailing)),
+                                removal: .opacity
+                            )
+                        )
+                        .zIndex(0)
+                }
+            }
+            .animation(FloatingPanelTransition.swiftUIAnimation, value: interactionModel.displayMode)
+
+            mascotIsland(field: field)
+                .zIndex(1)
+        }
+        .frame(width: hostSize.width, height: hostSize.height, alignment: .topTrailing)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+        .contentShape(Rectangle())
     }
 
     private func mascotIsland(field: FloatingPanelMotionField) -> some View {
@@ -318,7 +342,7 @@ struct FloatingPanelView: View {
         .frame(width: compactIslandSize.width, height: compactIslandSize.height)
         .contentShape(Rectangle())
         .onHover { interactionModel.setHoveringMascot($0) }
-        .help("点击精灵可以临时加速动画")
+        .help(Text(verbatim: "点击精灵可以临时加速动画"))
     }
 
     private func taskListPanel(

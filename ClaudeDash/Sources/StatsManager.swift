@@ -1063,6 +1063,36 @@ final class StatsManager: ObservableObject {
         return snapshot
     }
 
+    func chartDailySummaries(forLastDays days: Int, source: SessionSource?) -> [DailySummary] {
+        let clampedDays = min(max(days, 1), 30)
+        let calendar = Calendar.current
+        let now = Date()
+        let startDate = calendar.startOfDay(
+            for: calendar.date(byAdding: .day, value: -(clampedDays - 1), to: now) ?? now
+        )
+        let endDate = calendar.date(
+            byAdding: .day, value: 1, to: calendar.startOfDay(for: now)
+        ) ?? now
+
+        let pool = source == nil ? cachedAllSessions : allSessions
+        var sessions = pool.filter {
+            $0.startTime >= startDate && $0.startTime < endDate
+        }
+        if let source {
+            sessions = sessions.filter { $0.source == source }
+        }
+
+        let dailyMap = StatsComputation.buildDailyMap(from: sessions, calendar: calendar)
+
+        var result: [DailySummary] = []
+        for offset in (0..<clampedDays).reversed() {
+            let date = calendar.date(byAdding: .day, value: -offset, to: now) ?? now
+            let key = dateFormatter.string(from: date)
+            result.append(dailyMap[key] ?? DailySummary(dateString: key))
+        }
+        return result
+    }
+
     // MARK: - 数据导出
 
     func exportCSV() -> String {

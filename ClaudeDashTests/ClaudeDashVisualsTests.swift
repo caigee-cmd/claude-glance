@@ -574,6 +574,16 @@ final class ClaudeDashVisualsTests: XCTestCase {
         XCTAssertTrue(source.contains("FloatingPanelLayout.mascotSize(for: mascotSizeOption)"))
     }
 
+    func testFloatingPanelSourceOnlyAnimatesTimelineDuringVisibleLiveActivity() throws {
+        let sourceURL = projectRootURL.appendingPathComponent("ClaudeDash/Sources/FloatingPanelView.swift")
+        let source = try String(contentsOf: sourceURL)
+
+        XCTAssertTrue(source.contains("private var shouldAnimateMotion: Bool"))
+        XCTAssertTrue(source.contains("interactionModel.shouldAnimateMotion && hasLiveActivity"))
+        XCTAssertTrue(source.contains("if shouldAnimateMotion {"))
+        XCTAssertTrue(source.contains("TimelineView(.animation(minimumInterval: 1.0 / FloatingPanelTransition.targetFPS))"))
+    }
+
     func testSettingsSceneHostsSettingsViewAndPopoverOffersSettingsEntry() throws {
         let appSourceURL = projectRootURL.appendingPathComponent("ClaudeDash/Sources/ClaudeDashApp.swift")
         let appSource = try String(contentsOf: appSourceURL)
@@ -913,6 +923,20 @@ final class ClaudeDashVisualsTests: XCTestCase {
         XCTAssertEqual(model.mascotPlaybackState, .stoppedAtFirstFrame)
         XCTAssertEqual(model.tapBoostCount, 0)
         XCTAssertEqual(model.playbackSpeed, 1.0, accuracy: 0.001)
+    }
+
+    @MainActor
+    func testInteractionModelRequiresVisiblePanelForBackgroundMotion() {
+        let model = FloatingPanelInteractionModel()
+
+        model.setPlaybackActive(true)
+        XCTAssertFalse(model.shouldAnimateMotion)
+
+        model.setPanelVisible(true)
+        XCTAssertTrue(model.shouldAnimateMotion)
+
+        model.setPanelVisible(false)
+        XCTAssertFalse(model.shouldAnimateMotion)
     }
 
     @MainActor

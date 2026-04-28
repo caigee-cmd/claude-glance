@@ -8,61 +8,100 @@
 
 /* Begin PBXBuildFile section */
 		025501F5B32C714E784826C7 /* StatusBarPopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F103696C1A407BE547CD27 /* StatusBarPopoverView.swift */; };
+		0291A26360BD60334697BF36 /* bunny.json in Resources */ = {isa = PBXBuildFile; fileRef = 0758DEE04BE2940ACB14749D /* bunny.json */; };
+		05DCED3B518339D7C0505361 /* Free Couple Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 0C3A0567D6CC96AADED71AB8 /* Free Couple Animation.json */; };
+		0DB6B199B2A52781983AA735 /* Free Split Jump Exercise Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 8B905D574994CE1251619B3A /* Free Split Jump Exercise Animation.json */; };
 		102589CE044F94629E172AA8 /* AppIcon-Design-Philosophy.md in Resources */ = {isa = PBXBuildFile; fileRef = BCE0A97C40AB829606141A6C /* AppIcon-Design-Philosophy.md */; };
 		13FD689A9E2DD28AF4808D9E /* CacheEfficiencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB65C20883A83858B070DB08 /* CacheEfficiencyView.swift */; };
+		14CF111419297D6FCAF3D034 /* Free Walking Dog Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 83BD18C55F73484721737A66 /* Free Walking Dog Animation.json */; };
 		157570D987E5D688B9538020 /* FloatingPanelInteractionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86627E6FB9717F33881B86E5 /* FloatingPanelInteractionModel.swift */; };
 		15B7BA26E82EEDE48F3C9BCA /* cat-ball.json in Resources */ = {isa = PBXBuildFile; fileRef = E02793EBB028FE22493E698F /* cat-ball.json */; };
 		171F9E17F7750494EFCD66B4 /* MenuBarIcon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 748FD3CE00C3A84583F52ADD /* MenuBarIcon-1024.png */; };
+		185C8431550BA94948293B21 /* Free Orange skating Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = B887F41580FAE6D3772DB02F /* Free Orange skating Animation.json */; };
 		18F74A224C3E57E6C6266F80 /* cat-guitar.json in Resources */ = {isa = PBXBuildFile; fileRef = F2FB19934FF67E172CDB2EEC /* cat-guitar.json */; };
 		223511815BD524E6FC165AEC /* UsageTrendChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690C1F4029F8D2A4579D1D63 /* UsageTrendChartView.swift */; };
 		2B320C1E43F290576AED4AD5 /* FloatingMascotLottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0FD105AAD50131815846CC0 /* FloatingMascotLottieView.swift */; };
 		3151302DEF349C241D9A32CF /* ContributionHeatmapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E03AC435B08008BF79CD6D5 /* ContributionHeatmapView.swift */; };
+		365EF647092AF701CA761E3E /* doggo.json in Resources */ = {isa = PBXBuildFile; fileRef = EE6E04682C2B3A04627BDBA9 /* doggo.json */; };
 		44980D1B1D15AF7400EADE8E /* NotificationSender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C1AA5F07D7A14BF0514AAF6 /* NotificationSender.swift */; };
 		470C470BB16F295A0B615A1D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03181177D5FA9E849224E547 /* SettingsView.swift */; };
+		4838A598982337DF40EBC6E1 /* Free Walk Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 24AF0110C13DD0EA622379DD /* Free Walk Animation.json */; };
 		488D49B810E97D7B2A70AA7A /* AppIcon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 193FC422BDDE5188EDD4971D /* AppIcon-1024.png */; };
 		4E64794CF8F556BF1756FC3A /* OverviewTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB3D292F06A251CD203FD69 /* OverviewTab.swift */; };
 		5579B6D0A6740563C0E87CCC /* SourceFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C41DC8C0EEB70CB075F644 /* SourceFilterBar.swift */; };
 		57D2445A63C75BF6D5A5E333 /* StatsDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D91705204BF1CF6A3A29AFD /* StatsDetailView.swift */; };
 		5876385B638E0660A68D4E85 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4410D7113F62E45138B743B7 /* Models.swift */; };
 		59AF36977DDC6074558662B1 /* LiquidGlassTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFFF109477CA36E22C6B4A6D /* LiquidGlassTheme.swift */; };
+		5A0E302A61EC591533B81E14 /* Free A frog catching an insect in animation style Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 0A3B096FEEB3B5A554F530CF /* Free A frog catching an insect in animation style Animation.json */; };
 		5BFD42D462A6B45A171150FD /* ClaudeDashVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570DB2A01B8644C03802EF8D /* ClaudeDashVisuals.swift */; };
+		5E41CBBCB286641AA8076ABC /* Free Christmas Stickers Santa Claus Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 1A970C29D2F5E5CEDB2C0375 /* Free Christmas Stickers Santa Claus Animation.json */; };
 		60EAFA4ADAF17FEC81BB5747 /* TranscriptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47AD8C6AE4DB04D6F1CCF450 /* TranscriptParser.swift */; };
+		62200465614636C757BD4B7E /* Free Run Forrest Run Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 36F3CBCECAED248FB2F9BFDD /* Free Run Forrest Run Animation.json */; };
+		6335B5F0CA9344F49C053BBA /* cat-laugh.json in Resources */ = {isa = PBXBuildFile; fileRef = 962132D5D556E18BC79BC94E /* cat-laugh.json */; };
+		63FA3988BC9A2B1F6C1D75A3 /* morning-walk.json in Resources */ = {isa = PBXBuildFile; fileRef = 6B829551CD7B3FCCC2C32FC0 /* morning-walk.json */; };
+		69341F5EC2261EA9986CF688 /* cat-love.json in Resources */ = {isa = PBXBuildFile; fileRef = 4883630196843E98DBFDE9D4 /* cat-love.json */; };
 		6CE3609F3AF4FF77AB3E3B60 /* WeeklyPunchCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A1020A520EB83FB54A8CC90 /* WeeklyPunchCardView.swift */; };
 		6F63F9F64778C0B068F492BF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F1D03B36973487B19D0C695 /* Assets.xcassets */; };
 		70935162B916D1C0AB93DDF7 /* FloatingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E870B006D651142B0D77039D /* FloatingPanelView.swift */; };
+		7159909CADDA3EFE0545F568 /* Free Burpee and Jump Exercise Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 59EFDCC9A43D7AEF5325C8D1 /* Free Burpee and Jump Exercise Animation.json */; };
 		722ACBEEA6BCF30D296D47D2 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 6842206345ECB793859A6625 /* Lottie */; };
+		751C0A630292FB49E668B9AD /* Free man running Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 998B38416B26B946A197DFD7 /* Free man running Animation.json */; };
 		75FCCC28EEB47AA1818FD0A0 /* ClaudeDashHelper in Resources */ = {isa = PBXBuildFile; fileRef = 05AEF698AFC8E56908963B9C /* ClaudeDashHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		76B861F56EED928DC5B1A47B /* StatsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C3CB5B106AA421902B6DBD4 /* StatsManager.swift */; };
 		7879E2D830A4F2BF781F2149 /* SessionTimelineAxisTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3820B6CEA0FF06A21061A52B /* SessionTimelineAxisTests.swift */; };
 		7D27EC736818B559400BC42A /* cat-sax.json in Resources */ = {isa = PBXBuildFile; fileRef = 9A654DE90172136ECBBCF192 /* cat-sax.json */; };
+		7F14ED87EF6F1891F8A065F0 /* Free Bird pair love and flying sky Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 13508570C726442AEAEF8AA3 /* Free Bird pair love and flying sky Animation.json */; };
 		8170ED6C15AD20AF1D949701 /* HookInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197740A15E5514BFCBEE8CA4 /* HookInstaller.swift */; };
 		81B6DF4F166E5ECB7A7C7A25 /* ClaudeDashVisuals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570DB2A01B8644C03802EF8D /* ClaudeDashVisuals.swift */; };
+		842FD616BECA1A3F61356764 /* Free Fun Christmas tree Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = AB253E060A4C5015FD85E524 /* Free Fun Christmas tree Animation.json */; };
+		873668653B6485375E348C23 /* morty-dance.json in Resources */ = {isa = PBXBuildFile; fileRef = CF5443D2E6B9CF2A036BB6CB /* morty-dance.json */; };
 		873FD8A71FCE6F398529A2A1 /* DurationDistributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8650D18DBCF5F063D8E3E09D /* DurationDistributionView.swift */; };
 		8C31568D841EF32B7E3A7D7A /* FloatingPanelLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23AF2CC41B438833FD977C6E /* FloatingPanelLayoutTests.swift */; };
 		8DBAC3095A43250B7F7D33F0 /* FloatingMascotInteractionSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8AD3F6247E06D342417A56D /* FloatingMascotInteractionSurface.swift */; };
+		8DC9757F3CB0D5BBF9CDA35E /* Free Caterpillar Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = F4384CA400B1314C10CF746F /* Free Caterpillar Animation.json */; };
+		989648ED5131040E5EED306F /* Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 4BA2DC9BB20D1BB0656CB5E5 /* Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json */; };
+		9F752498D4981841F501D77F /* Free Happy girl Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 41E6C99C40C73C8F6E0CADC7 /* Free Happy girl Animation.json */; };
+		A00BA58A7603A96F0926F021 /* morty-cry.json in Resources */ = {isa = PBXBuildFile; fileRef = 170A2CE9EA38026C4619F836 /* morty-cry.json */; };
 		A3EAAC0BD93D53C3570C12B5 /* SessionTimelineAxis.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D853098EC4E1FF1E04C8D5C /* SessionTimelineAxis.swift */; };
+		A4C65EC60F33084F7FACD157 /* Free Loading animation Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = D6A584161875E7EECF8F99DB /* Free Loading animation Animation.json */; };
+		A67F95DAFD1333D77983DFD9 /* cat-crying.json in Resources */ = {isa = PBXBuildFile; fileRef = 3389C023A23D3952924EB1EB /* cat-crying.json */; };
 		A919922BB4F641F7949C7444 /* ActivityRingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC562DFD90C8E818E689CD51 /* ActivityRingsView.swift */; };
 		A96ED0E574B7B71EF29CBFA9 /* FloatingPanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E07FC38F4C5ACC1F0384E4 /* FloatingPanelController.swift */; };
 		AC51370B56442F9959B1736F /* InsightsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE356D556E5498575038AD56 /* InsightsCardView.swift */; };
+		AEBCE327E53746E401F70905 /* groovy-walk.json in Resources */ = {isa = PBXBuildFile; fileRef = 59066A71F620F12F6B74D34F /* groovy-walk.json */; };
+		B0580A150247196178BCF30D /* totoro.json in Resources */ = {isa = PBXBuildFile; fileRef = 98F881BB59116D889C612379 /* totoro.json */; };
 		B37B48852BC5E1D38FA6BE3B /* cat-drink.json in Resources */ = {isa = PBXBuildFile; fileRef = 16B14CC659BF078870733B02 /* cat-drink.json */; };
 		B8BF8292E5099878151C056B /* sweet-run-cycle.json in Resources */ = {isa = PBXBuildFile; fileRef = 76AB0B1377C6DAB90343C8D9 /* sweet-run-cycle.json */; };
 		B96972C6B2CBA396477769DC /* cat-hide.json in Resources */ = {isa = PBXBuildFile; fileRef = CE5BF9D2A0A8C808ECDFBF77 /* cat-hide.json */; };
 		BDFB1B33122AFA4F7119FA59 /* BrandLogos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64A81456CF76783779E579FF /* BrandLogos.swift */; };
+		BF6942029489C104200C986E /* Free Ape walk 4 Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 6825222189D07AE132E06375 /* Free Ape walk 4 Animation.json */; };
 		C47B675C5FCDF3900D5DE92F /* FloatingPanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0671C169F52659D3828BF601 /* FloatingPanelLayout.swift */; };
+		C4CC11E06D8D38ECD384C36C /* Free Military Push Ups Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C4748BD28F4E77155ADF727 /* Free Military Push Ups Animation.json */; };
+		C6C4328FEDDED96CF23AB5E2 /* Free broom Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A780EBAE3A3C040B135EFDF0 /* Free broom Animation.json */; };
 		C8B58853589E44874292B0AF /* cat-surprise.json in Resources */ = {isa = PBXBuildFile; fileRef = F3A0B51E26F0FD2B2ED6490B /* cat-surprise.json */; };
 		C9A3FA5FEF4F16587422D003 /* WeekComparisonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3279543EB6E444027EFAF2EB /* WeekComparisonView.swift */; };
+		CBC016157D15D8082C17A5A0 /* Free Fun Christmas tree Animation (1).json in Resources */ = {isa = PBXBuildFile; fileRef = 6BA3945B6753176E1F5336AE /* Free Fun Christmas tree Animation (1).json */; };
 		CBF621F6099D0FB5E1C3F51B /* cat-balloons.json in Resources */ = {isa = PBXBuildFile; fileRef = 523DD1BE2042AAD5671889F6 /* cat-balloons.json */; };
+		CE419768431A7B39C1E1084A /* Free Girl jumping Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 5977AC82B2975B48221DB8D9 /* Free Girl jumping Animation.json */; };
 		CED2ECCF5B9F5EA68A98D180 /* MonitorTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53479C040A84802CD726351 /* MonitorTab.swift */; };
 		D36E44937A912643C7E7B4F2 /* SessionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21DC4F24D13E48C61735D56 /* SessionMonitor.swift */; };
 		D55F13380CAAD432D7129845 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5D851BB5C3A067308969925 /* DashboardView.swift */; };
 		D6A9D17CBE5A3DD0839C6394 /* HistoryScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 379F6A361BA1AF6320D76708 /* HistoryScanner.swift */; };
 		DB2E696C45411A743AA07027 /* ClaudeDashVisualsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2880C33A45DE71826923DAB4 /* ClaudeDashVisualsTests.swift */; };
+		DC0DD86CA0B5FA8EC5AECACE /* computer-guy.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B93EABD3EB92599056534F5 /* computer-guy.json */; };
+		DCABCB0D17FDCA87EDA69F8C /* Free Lady Guitar Player Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = A613892A1848E5B8FF99BDA9 /* Free Lady Guitar Player Animation.json */; };
 		DD967B393FD17049497385F2 /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7072448EAA2D74A78718557D /* StatusBarController.swift */; };
 		E04D6F0F9D3842AAD26AC4CF /* lottie.min.js in Resources */ = {isa = PBXBuildFile; fileRef = E0FADDADC4783B12C539D597 /* lottie.min.js */; };
+		E3191524D89621FC6D424B04 /* Free Skateboard Cartoon Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 2BDA6E063117AB02A89DAA65 /* Free Skateboard Cartoon Animation.json */; };
+		E45664F83DC55A48C6C15A57 /* Free Turkey Power Walk Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 447FE48D3C9CA2E43D79DFB1 /* Free Turkey Power Walk Animation.json */; };
 		E4C41DE467F8609EF50CF73A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936D1380C1152787C64D4501 /* main.swift */; };
+		E7FE7A08B8FA0D3DC09A9BB6 /* Free Office Boy Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 2C5242067D14691A41B06D25 /* Free Office Boy Animation.json */; };
+		E968C787EE7C884A6303A6F3 /* Free Girl jumping Animation (1).json in Resources */ = {isa = PBXBuildFile; fileRef = 790546FF8F67C29CA6CF4BA3 /* Free Girl jumping Animation (1).json */; };
+		ED1CDC6EF39179EB456A5631 /* Free John and the haverboard Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = 3C622F76D97310EB9870374B /* Free John and the haverboard Animation.json */; };
 		EF86FDDB8220108157A749B7 /* SessionTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AA636388C166B4C601E61F1 /* SessionTimelineView.swift */; };
 		F0B318A36263A192FF51B052 /* ToolDistributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDD82E133803654DB3079C23 /* ToolDistributionView.swift */; };
 		FAA9360086368C95820A6AF2 /* ClaudeDashApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F89FF892C1DF8AA214EDC6B /* ClaudeDashApp.swift */; };
+		FBCC284528087528405B6FA8 /* Free A girl with a flag+Shadow Animation.json in Resources */ = {isa = PBXBuildFile; fileRef = C612B1941C4E2697B54B8EC8 /* Free A girl with a flag+Shadow Animation.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,58 +125,97 @@
 		03181177D5FA9E849224E547 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		05AEF698AFC8E56908963B9C /* ClaudeDashHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = ClaudeDashHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		0671C169F52659D3828BF601 /* FloatingPanelLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelLayout.swift; sourceTree = "<group>"; };
+		0758DEE04BE2940ACB14749D /* bunny.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = bunny.json; sourceTree = "<group>"; };
+		0A3B096FEEB3B5A554F530CF /* Free A frog catching an insect in animation style Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free A frog catching an insect in animation style Animation.json"; sourceTree = "<group>"; };
+		0C3A0567D6CC96AADED71AB8 /* Free Couple Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Couple Animation.json"; sourceTree = "<group>"; };
 		0D853098EC4E1FF1E04C8D5C /* SessionTimelineAxis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTimelineAxis.swift; sourceTree = "<group>"; };
+		13508570C726442AEAEF8AA3 /* Free Bird pair love and flying sky Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Bird pair love and flying sky Animation.json"; sourceTree = "<group>"; };
 		16B14CC659BF078870733B02 /* cat-drink.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-drink.json"; sourceTree = "<group>"; };
+		170A2CE9EA38026C4619F836 /* morty-cry.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "morty-cry.json"; sourceTree = "<group>"; };
 		193FC422BDDE5188EDD4971D /* AppIcon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AppIcon-1024.png"; sourceTree = "<group>"; };
 		197740A15E5514BFCBEE8CA4 /* HookInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HookInstaller.swift; sourceTree = "<group>"; };
+		1A970C29D2F5E5CEDB2C0375 /* Free Christmas Stickers Santa Claus Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Christmas Stickers Santa Claus Animation.json"; sourceTree = "<group>"; };
 		1C1AA5F07D7A14BF0514AAF6 /* NotificationSender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSender.swift; sourceTree = "<group>"; };
 		1E03AC435B08008BF79CD6D5 /* ContributionHeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContributionHeatmapView.swift; sourceTree = "<group>"; };
 		1F1D03B36973487B19D0C695 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23AF2CC41B438833FD977C6E /* FloatingPanelLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelLayoutTests.swift; sourceTree = "<group>"; };
+		24AF0110C13DD0EA622379DD /* Free Walk Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Walk Animation.json"; sourceTree = "<group>"; };
 		2880C33A45DE71826923DAB4 /* ClaudeDashVisualsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeDashVisualsTests.swift; sourceTree = "<group>"; };
+		2B93EABD3EB92599056534F5 /* computer-guy.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "computer-guy.json"; sourceTree = "<group>"; };
+		2BDA6E063117AB02A89DAA65 /* Free Skateboard Cartoon Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Skateboard Cartoon Animation.json"; sourceTree = "<group>"; };
+		2C5242067D14691A41B06D25 /* Free Office Boy Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Office Boy Animation.json"; sourceTree = "<group>"; };
 		2D91705204BF1CF6A3A29AFD /* StatsDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsDetailView.swift; sourceTree = "<group>"; };
 		3279543EB6E444027EFAF2EB /* WeekComparisonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekComparisonView.swift; sourceTree = "<group>"; };
+		3389C023A23D3952924EB1EB /* cat-crying.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-crying.json"; sourceTree = "<group>"; };
+		36F3CBCECAED248FB2F9BFDD /* Free Run Forrest Run Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Run Forrest Run Animation.json"; sourceTree = "<group>"; };
 		379F6A361BA1AF6320D76708 /* HistoryScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryScanner.swift; sourceTree = "<group>"; };
 		3820B6CEA0FF06A21061A52B /* SessionTimelineAxisTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTimelineAxisTests.swift; sourceTree = "<group>"; };
+		3C622F76D97310EB9870374B /* Free John and the haverboard Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free John and the haverboard Animation.json"; sourceTree = "<group>"; };
+		41E6C99C40C73C8F6E0CADC7 /* Free Happy girl Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Happy girl Animation.json"; sourceTree = "<group>"; };
 		4410D7113F62E45138B743B7 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		447FE48D3C9CA2E43D79DFB1 /* Free Turkey Power Walk Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Turkey Power Walk Animation.json"; sourceTree = "<group>"; };
 		47AD8C6AE4DB04D6F1CCF450 /* TranscriptParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptParser.swift; sourceTree = "<group>"; };
+		4883630196843E98DBFDE9D4 /* cat-love.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-love.json"; sourceTree = "<group>"; };
+		4BA2DC9BB20D1BB0656CB5E5 /* Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json"; sourceTree = "<group>"; };
+		4C4748BD28F4E77155ADF727 /* Free Military Push Ups Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Military Push Ups Animation.json"; sourceTree = "<group>"; };
 		523DD1BE2042AAD5671889F6 /* cat-balloons.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-balloons.json"; sourceTree = "<group>"; };
 		570DB2A01B8644C03802EF8D /* ClaudeDashVisuals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeDashVisuals.swift; sourceTree = "<group>"; };
+		59066A71F620F12F6B74D34F /* groovy-walk.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "groovy-walk.json"; sourceTree = "<group>"; };
+		5977AC82B2975B48221DB8D9 /* Free Girl jumping Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Girl jumping Animation.json"; sourceTree = "<group>"; };
+		59EFDCC9A43D7AEF5325C8D1 /* Free Burpee and Jump Exercise Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Burpee and Jump Exercise Animation.json"; sourceTree = "<group>"; };
 		64A81456CF76783779E579FF /* BrandLogos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandLogos.swift; sourceTree = "<group>"; };
+		6825222189D07AE132E06375 /* Free Ape walk 4 Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Ape walk 4 Animation.json"; sourceTree = "<group>"; };
 		690C1F4029F8D2A4579D1D63 /* UsageTrendChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageTrendChartView.swift; sourceTree = "<group>"; };
+		6B829551CD7B3FCCC2C32FC0 /* morning-walk.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "morning-walk.json"; sourceTree = "<group>"; };
+		6BA3945B6753176E1F5336AE /* Free Fun Christmas tree Animation (1).json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Fun Christmas tree Animation (1).json"; sourceTree = "<group>"; };
 		701116DC9519FDDF198C4C10 /* lottie-spm */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lottie-spm"; path = "Vendor/lottie-spm"; sourceTree = SOURCE_ROOT; };
 		7072448EAA2D74A78718557D /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		748FD3CE00C3A84583F52ADD /* MenuBarIcon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MenuBarIcon-1024.png"; sourceTree = "<group>"; };
 		76AB0B1377C6DAB90343C8D9 /* sweet-run-cycle.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "sweet-run-cycle.json"; sourceTree = "<group>"; };
+		790546FF8F67C29CA6CF4BA3 /* Free Girl jumping Animation (1).json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Girl jumping Animation (1).json"; sourceTree = "<group>"; };
 		7AA636388C166B4C601E61F1 /* SessionTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTimelineView.swift; sourceTree = "<group>"; };
 		7C3CB5B106AA421902B6DBD4 /* StatsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsManager.swift; sourceTree = "<group>"; };
+		83BD18C55F73484721737A66 /* Free Walking Dog Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Walking Dog Animation.json"; sourceTree = "<group>"; };
 		8650D18DBCF5F063D8E3E09D /* DurationDistributionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DurationDistributionView.swift; sourceTree = "<group>"; };
 		86627E6FB9717F33881B86E5 /* FloatingPanelInteractionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelInteractionModel.swift; sourceTree = "<group>"; };
 		8B60310ECB6288A92C1E492E /* ClaudeDashTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ClaudeDashTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B905D574994CE1251619B3A /* Free Split Jump Exercise Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Split Jump Exercise Animation.json"; sourceTree = "<group>"; };
 		936D1380C1152787C64D4501 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		962132D5D556E18BC79BC94E /* cat-laugh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-laugh.json"; sourceTree = "<group>"; };
+		98F881BB59116D889C612379 /* totoro.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = totoro.json; sourceTree = "<group>"; };
+		998B38416B26B946A197DFD7 /* Free man running Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free man running Animation.json"; sourceTree = "<group>"; };
 		9A1020A520EB83FB54A8CC90 /* WeeklyPunchCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyPunchCardView.swift; sourceTree = "<group>"; };
 		9A654DE90172136ECBBCF192 /* cat-sax.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-sax.json"; sourceTree = "<group>"; };
 		9AB3D292F06A251CD203FD69 /* OverviewTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewTab.swift; sourceTree = "<group>"; };
 		9F89FF892C1DF8AA214EDC6B /* ClaudeDashApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeDashApp.swift; sourceTree = "<group>"; };
+		A613892A1848E5B8FF99BDA9 /* Free Lady Guitar Player Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Lady Guitar Player Animation.json"; sourceTree = "<group>"; };
+		A780EBAE3A3C040B135EFDF0 /* Free broom Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free broom Animation.json"; sourceTree = "<group>"; };
 		A8AD3F6247E06D342417A56D /* FloatingMascotInteractionSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingMascotInteractionSurface.swift; sourceTree = "<group>"; };
+		AB253E060A4C5015FD85E524 /* Free Fun Christmas tree Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Fun Christmas tree Animation.json"; sourceTree = "<group>"; };
 		AB65C20883A83858B070DB08 /* CacheEfficiencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheEfficiencyView.swift; sourceTree = "<group>"; };
 		AC562DFD90C8E818E689CD51 /* ActivityRingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRingsView.swift; sourceTree = "<group>"; };
 		B21DC4F24D13E48C61735D56 /* SessionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMonitor.swift; sourceTree = "<group>"; };
 		B3E07FC38F4C5ACC1F0384E4 /* FloatingPanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelController.swift; sourceTree = "<group>"; };
+		B887F41580FAE6D3772DB02F /* Free Orange skating Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Orange skating Animation.json"; sourceTree = "<group>"; };
 		B8F103696C1A407BE547CD27 /* StatusBarPopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarPopoverView.swift; sourceTree = "<group>"; };
 		BCE0A97C40AB829606141A6C /* AppIcon-Design-Philosophy.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "AppIcon-Design-Philosophy.md"; sourceTree = "<group>"; };
+		C612B1941C4E2697B54B8EC8 /* Free A girl with a flag+Shadow Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free A girl with a flag+Shadow Animation.json"; sourceTree = "<group>"; };
 		CE5BF9D2A0A8C808ECDFBF77 /* cat-hide.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-hide.json"; sourceTree = "<group>"; };
+		CF5443D2E6B9CF2A036BB6CB /* morty-dance.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "morty-dance.json"; sourceTree = "<group>"; };
 		D0FD105AAD50131815846CC0 /* FloatingMascotLottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingMascotLottieView.swift; sourceTree = "<group>"; };
 		D53479C040A84802CD726351 /* MonitorTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorTab.swift; sourceTree = "<group>"; };
 		D5D851BB5C3A067308969925 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		D6A584161875E7EECF8F99DB /* Free Loading animation Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Loading animation Animation.json"; sourceTree = "<group>"; };
 		E02793EBB028FE22493E698F /* cat-ball.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-ball.json"; sourceTree = "<group>"; };
 		E0FADDADC4783B12C539D597 /* lottie.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = lottie.min.js; sourceTree = "<group>"; };
 		E870B006D651142B0D77039D /* FloatingPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
 		EDD82E133803654DB3079C23 /* ToolDistributionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolDistributionView.swift; sourceTree = "<group>"; };
 		EE356D556E5498575038AD56 /* InsightsCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsightsCardView.swift; sourceTree = "<group>"; };
+		EE6E04682C2B3A04627BDBA9 /* doggo.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = doggo.json; sourceTree = "<group>"; };
 		F2FB19934FF67E172CDB2EEC /* cat-guitar.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-guitar.json"; sourceTree = "<group>"; };
 		F3A0B51E26F0FD2B2ED6490B /* cat-surprise.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "cat-surprise.json"; sourceTree = "<group>"; };
 		F3C41DC8C0EEB70CB075F644 /* SourceFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceFilterBar.swift; sourceTree = "<group>"; };
+		F4384CA400B1314C10CF746F /* Free Caterpillar Animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "Free Caterpillar Animation.json"; sourceTree = "<group>"; };
 		FD1F69DAEB401D6204D71B2B /* ClaudeDash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudeDash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFFF109477CA36E22C6B4A6D /* LiquidGlassTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiquidGlassTheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -222,15 +300,54 @@
 		A0545148AE023C6E24BA88B7 /* Lottie */ = {
 			isa = PBXGroup;
 			children = (
+				0758DEE04BE2940ACB14749D /* bunny.json */,
 				E02793EBB028FE22493E698F /* cat-ball.json */,
 				523DD1BE2042AAD5671889F6 /* cat-balloons.json */,
+				3389C023A23D3952924EB1EB /* cat-crying.json */,
 				16B14CC659BF078870733B02 /* cat-drink.json */,
 				F2FB19934FF67E172CDB2EEC /* cat-guitar.json */,
 				CE5BF9D2A0A8C808ECDFBF77 /* cat-hide.json */,
+				962132D5D556E18BC79BC94E /* cat-laugh.json */,
+				4883630196843E98DBFDE9D4 /* cat-love.json */,
 				9A654DE90172136ECBBCF192 /* cat-sax.json */,
 				F3A0B51E26F0FD2B2ED6490B /* cat-surprise.json */,
+				2B93EABD3EB92599056534F5 /* computer-guy.json */,
+				EE6E04682C2B3A04627BDBA9 /* doggo.json */,
+				0A3B096FEEB3B5A554F530CF /* Free A frog catching an insect in animation style Animation.json */,
+				C612B1941C4E2697B54B8EC8 /* Free A girl with a flag+Shadow Animation.json */,
+				6825222189D07AE132E06375 /* Free Ape walk 4 Animation.json */,
+				13508570C726442AEAEF8AA3 /* Free Bird pair love and flying sky Animation.json */,
+				A780EBAE3A3C040B135EFDF0 /* Free broom Animation.json */,
+				59EFDCC9A43D7AEF5325C8D1 /* Free Burpee and Jump Exercise Animation.json */,
+				F4384CA400B1314C10CF746F /* Free Caterpillar Animation.json */,
+				1A970C29D2F5E5CEDB2C0375 /* Free Christmas Stickers Santa Claus Animation.json */,
+				0C3A0567D6CC96AADED71AB8 /* Free Couple Animation.json */,
+				4BA2DC9BB20D1BB0656CB5E5 /* Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json */,
+				6BA3945B6753176E1F5336AE /* Free Fun Christmas tree Animation (1).json */,
+				AB253E060A4C5015FD85E524 /* Free Fun Christmas tree Animation.json */,
+				790546FF8F67C29CA6CF4BA3 /* Free Girl jumping Animation (1).json */,
+				5977AC82B2975B48221DB8D9 /* Free Girl jumping Animation.json */,
+				41E6C99C40C73C8F6E0CADC7 /* Free Happy girl Animation.json */,
+				3C622F76D97310EB9870374B /* Free John and the haverboard Animation.json */,
+				A613892A1848E5B8FF99BDA9 /* Free Lady Guitar Player Animation.json */,
+				D6A584161875E7EECF8F99DB /* Free Loading animation Animation.json */,
+				998B38416B26B946A197DFD7 /* Free man running Animation.json */,
+				4C4748BD28F4E77155ADF727 /* Free Military Push Ups Animation.json */,
+				2C5242067D14691A41B06D25 /* Free Office Boy Animation.json */,
+				B887F41580FAE6D3772DB02F /* Free Orange skating Animation.json */,
+				36F3CBCECAED248FB2F9BFDD /* Free Run Forrest Run Animation.json */,
+				2BDA6E063117AB02A89DAA65 /* Free Skateboard Cartoon Animation.json */,
+				8B905D574994CE1251619B3A /* Free Split Jump Exercise Animation.json */,
+				447FE48D3C9CA2E43D79DFB1 /* Free Turkey Power Walk Animation.json */,
+				24AF0110C13DD0EA622379DD /* Free Walk Animation.json */,
+				83BD18C55F73484721737A66 /* Free Walking Dog Animation.json */,
+				59066A71F620F12F6B74D34F /* groovy-walk.json */,
 				E0FADDADC4783B12C539D597 /* lottie.min.js */,
+				6B829551CD7B3FCCC2C32FC0 /* morning-walk.json */,
+				170A2CE9EA38026C4619F836 /* morty-cry.json */,
+				CF5443D2E6B9CF2A036BB6CB /* morty-dance.json */,
 				76AB0B1377C6DAB90343C8D9 /* sweet-run-cycle.json */,
+				98F881BB59116D889C612379 /* totoro.json */,
 			);
 			path = Lottie;
 			sourceTree = "<group>";
@@ -391,16 +508,55 @@
 				488D49B810E97D7B2A70AA7A /* AppIcon-1024.png in Resources */,
 				102589CE044F94629E172AA8 /* AppIcon-Design-Philosophy.md in Resources */,
 				6F63F9F64778C0B068F492BF /* Assets.xcassets in Resources */,
+				5A0E302A61EC591533B81E14 /* Free A frog catching an insect in animation style Animation.json in Resources */,
+				FBCC284528087528405B6FA8 /* Free A girl with a flag+Shadow Animation.json in Resources */,
+				BF6942029489C104200C986E /* Free Ape walk 4 Animation.json in Resources */,
+				7F14ED87EF6F1891F8A065F0 /* Free Bird pair love and flying sky Animation.json in Resources */,
+				7159909CADDA3EFE0545F568 /* Free Burpee and Jump Exercise Animation.json in Resources */,
+				8DC9757F3CB0D5BBF9CDA35E /* Free Caterpillar Animation.json in Resources */,
+				5E41CBBCB286641AA8076ABC /* Free Christmas Stickers Santa Claus Animation.json in Resources */,
+				05DCED3B518339D7C0505361 /* Free Couple Animation.json in Resources */,
+				989648ED5131040E5EED306F /* Free Delivery Guy on Bicycle, Cycle, and Bike Animation.json in Resources */,
+				CBC016157D15D8082C17A5A0 /* Free Fun Christmas tree Animation (1).json in Resources */,
+				842FD616BECA1A3F61356764 /* Free Fun Christmas tree Animation.json in Resources */,
+				E968C787EE7C884A6303A6F3 /* Free Girl jumping Animation (1).json in Resources */,
+				CE419768431A7B39C1E1084A /* Free Girl jumping Animation.json in Resources */,
+				9F752498D4981841F501D77F /* Free Happy girl Animation.json in Resources */,
+				ED1CDC6EF39179EB456A5631 /* Free John and the haverboard Animation.json in Resources */,
+				DCABCB0D17FDCA87EDA69F8C /* Free Lady Guitar Player Animation.json in Resources */,
+				A4C65EC60F33084F7FACD157 /* Free Loading animation Animation.json in Resources */,
+				C4CC11E06D8D38ECD384C36C /* Free Military Push Ups Animation.json in Resources */,
+				E7FE7A08B8FA0D3DC09A9BB6 /* Free Office Boy Animation.json in Resources */,
+				185C8431550BA94948293B21 /* Free Orange skating Animation.json in Resources */,
+				62200465614636C757BD4B7E /* Free Run Forrest Run Animation.json in Resources */,
+				E3191524D89621FC6D424B04 /* Free Skateboard Cartoon Animation.json in Resources */,
+				0DB6B199B2A52781983AA735 /* Free Split Jump Exercise Animation.json in Resources */,
+				E45664F83DC55A48C6C15A57 /* Free Turkey Power Walk Animation.json in Resources */,
+				4838A598982337DF40EBC6E1 /* Free Walk Animation.json in Resources */,
+				14CF111419297D6FCAF3D034 /* Free Walking Dog Animation.json in Resources */,
+				C6C4328FEDDED96CF23AB5E2 /* Free broom Animation.json in Resources */,
+				751C0A630292FB49E668B9AD /* Free man running Animation.json in Resources */,
 				171F9E17F7750494EFCD66B4 /* MenuBarIcon-1024.png in Resources */,
+				0291A26360BD60334697BF36 /* bunny.json in Resources */,
 				15B7BA26E82EEDE48F3C9BCA /* cat-ball.json in Resources */,
 				CBF621F6099D0FB5E1C3F51B /* cat-balloons.json in Resources */,
+				A67F95DAFD1333D77983DFD9 /* cat-crying.json in Resources */,
 				B37B48852BC5E1D38FA6BE3B /* cat-drink.json in Resources */,
 				18F74A224C3E57E6C6266F80 /* cat-guitar.json in Resources */,
 				B96972C6B2CBA396477769DC /* cat-hide.json in Resources */,
+				6335B5F0CA9344F49C053BBA /* cat-laugh.json in Resources */,
+				69341F5EC2261EA9986CF688 /* cat-love.json in Resources */,
 				7D27EC736818B559400BC42A /* cat-sax.json in Resources */,
 				C8B58853589E44874292B0AF /* cat-surprise.json in Resources */,
+				DC0DD86CA0B5FA8EC5AECACE /* computer-guy.json in Resources */,
+				365EF647092AF701CA761E3E /* doggo.json in Resources */,
+				AEBCE327E53746E401F70905 /* groovy-walk.json in Resources */,
 				E04D6F0F9D3842AAD26AC4CF /* lottie.min.js in Resources */,
+				63FA3988BC9A2B1F6C1D75A3 /* morning-walk.json in Resources */,
+				A00BA58A7603A96F0926F021 /* morty-cry.json in Resources */,
+				873668653B6485375E348C23 /* morty-dance.json in Resources */,
 				B8BF8292E5099878151C056B /* sweet-run-cycle.json in Resources */,
+				B0580A150247196178BCF30D /* totoro.json in Resources */,
 				75FCCC28EEB47AA1818FD0A0 /* ClaudeDashHelper in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

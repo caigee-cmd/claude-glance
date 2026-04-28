@@ -136,6 +136,17 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
     case catSax
     case catSurprise
     case catBalloons
+    case doggo
+    case bunny
+    case totoro
+    case computerGuy
+    case catCrying
+    case catLove
+    case catLaugh
+    case mortyCry
+    case mortyDance
+    case morningWalk
+    case groovyWalk
 
     static let userDefaultsKey = "ClaudeDash_floatingMascotAppearance"
 
@@ -151,6 +162,17 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
         case .catSax: return "萨克斯"
         case .catSurprise: return "惊讶"
         case .catBalloons: return "气球"
+        case .doggo: return "狗狗"
+        case .bunny: return "兔兔"
+        case .totoro: return "龙猫"
+        case .computerGuy: return "码农"
+        case .catCrying: return "猫哭泣"
+        case .catLove: return "猫恋爱"
+        case .catLaugh: return "猫大笑"
+        case .mortyCry: return "Morty 哭"
+        case .mortyDance: return "Morty 舞"
+        case .morningWalk: return "晨跑"
+        case .groovyWalk: return "时髦步"
         }
     }
 
@@ -164,6 +186,17 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
         case .catSax: return "cat-sax"
         case .catSurprise: return "cat-surprise"
         case .catBalloons: return "cat-balloons"
+        case .doggo: return "doggo"
+        case .bunny: return "bunny"
+        case .totoro: return "totoro"
+        case .computerGuy: return "computer-guy"
+        case .catCrying: return "cat-crying"
+        case .catLove: return "cat-love"
+        case .catLaugh: return "cat-laugh"
+        case .mortyCry: return "morty-cry"
+        case .mortyDance: return "morty-dance"
+        case .morningWalk: return "morning-walk"
+        case .groovyWalk: return "groovy-walk"
         }
     }
 }

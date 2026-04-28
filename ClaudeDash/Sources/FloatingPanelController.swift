@@ -145,12 +145,14 @@ final class FloatingPanelController {
         }
         panel?.orderFrontRegardless()
         isVisible = true
+        interactionModel.setPanelVisible(true)
     }
 
     func hidePanel(manual: Bool = true) {
         savePosition()
         panel?.orderOut(nil)
         isVisible = false
+        interactionModel.setPanelVisible(false)
         isManuallyPresented = false
         if manual {
             isManuallyHidden = true

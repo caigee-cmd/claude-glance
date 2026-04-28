@@ -108,13 +108,6 @@ struct StatusBarPopoverView: View {
                 .padding(.horizontal, PopoverPanelStyle.outerPadding)
                 .padding(.bottom, 8)
 
-            sectionDivider
-
-            sourceFilterBar
-                .padding(.horizontal, PopoverPanelStyle.outerPadding)
-                .padding(.top, 8)
-                .padding(.bottom, 4)
-
             if !filteredActiveSessions.isEmpty {
                 sectionDivider
 
@@ -283,15 +276,20 @@ struct StatusBarPopoverView: View {
 
     // MARK: - Trend Overview
 
-    private var selectedOverviewSnapshot: StatsManager.RangeSnapshot {
-        statsManager.snapshot(forLastDays: selectedOverviewRange.days)
+    private var filteredChartData: [DailySummary] {
+        statsManager.chartDailySummaries(
+            forLastDays: selectedOverviewRange.days,
+            source: selectedSource
+        )
     }
 
     private var overviewSection: some View {
         VStack(spacing: 8) {
             popoverQuickRangeBar
 
-            PopoverTrendHero(data: selectedOverviewSnapshot.dailySummaries)
+            sourceFilterBar
+
+            PopoverTrendHero(data: filteredChartData)
                 .frame(maxWidth: .infinity)
                 .popoverSurfaceBackground(cornerRadius: 14)
         }
@@ -705,28 +703,13 @@ struct ActiveSessionRow: View {
                         .lineLimit(1)
 
                     Spacer(minLength: 0)
-
-                    Text(elapsedTime)
-                        .font(.system(size: 10, weight: .medium, design: .monospaced))
-                        .monospacedDigit()
-                        .foregroundStyle(.primary.opacity(PopoverPanelStyle.secondaryTextOpacity))
-                        .padding(.horizontal, 7)
-                        .padding(.vertical, 4)
-                        .background(Capsule().fill(Color.white.opacity(PopoverPanelStyle.subtlePillOpacity)))
                 }
 
-                HStack(spacing: 7) {
-                    CompactMetricStrip(
-                        icon: "waveform",
-                        progress: max(session.tokenUsage, 0.12),
-                        color: statusColor
-                    )
-                    CompactMetricStrip(
-                        icon: "clock",
-                        progress: elapsedProgress,
-                        color: .white.opacity(0.82)
-                    )
-                }
+                CompactMetricStrip(
+                    icon: "waveform",
+                    progress: max(session.tokenUsage, 0.12),
+                    color: statusColor
+                )
             }
         }
         .padding(.horizontal, 10)
@@ -759,17 +742,6 @@ struct ActiveSessionRow: View {
         }
     }
 
-    private var elapsedTime: String {
-        let seconds = Int(-session.startTime.timeIntervalSinceNow)
-        if seconds < 60 { return "\(seconds)s" }
-        let minutes = seconds / 60
-        if minutes < 60 { return "\(minutes)m \(seconds % 60)s" }
-        return "\(minutes / 60)h \(minutes % 60)m"
-    }
-
-    private var elapsedProgress: Double {
-        min(Double(Int(-session.startTime.timeIntervalSinceNow)) / 3600.0, 1.0)
-    }
 }
 
 

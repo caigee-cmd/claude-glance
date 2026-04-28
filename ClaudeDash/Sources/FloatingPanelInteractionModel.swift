@@ -51,6 +51,7 @@ final class FloatingPanelInteractionModel: ObservableObject {
     @Published private(set) var playbackSpeed: Double = FloatingPanelPlaybackRules.baseSpeed()
     @Published private(set) var mascotPlaybackState: FloatingMascotPlaybackState = .stoppedAtFirstFrame
     @Published private(set) var tapBoostCount = 0
+    @Published private(set) var isPanelVisible = false
 
     private let hoverRules: FloatingPanelHoverRules
     private var isHoveringMascot = false
@@ -151,6 +152,15 @@ final class FloatingPanelInteractionModel: ObservableObject {
 
         hasLivePlayback = active
         updateMascotPlaybackState()
+    }
+
+    func setPanelVisible(_ visible: Bool) {
+        guard isPanelVisible != visible else { return }
+        isPanelVisible = visible
+    }
+
+    var shouldAnimateMotion: Bool {
+        isPanelVisible && hasLivePlayback
     }
 
     func refreshPlaybackBaseSpeed() {
