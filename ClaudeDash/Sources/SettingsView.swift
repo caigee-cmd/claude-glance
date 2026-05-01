@@ -27,7 +27,7 @@ struct SettingsView: View {
     @AppStorage(
         FloatingMascotAppearanceOption.userDefaultsKey,
         store: ClaudeDashDefaults.shared
-    ) private var mascotAppearanceRawValue = FloatingMascotAppearanceOption.runner.rawValue
+    ) private var mascotAppearanceRawValue = FloatingMascotAppearanceOption.catDrink.rawValue
     @AppStorage(
         FloatingMascotSizeOption.userDefaultsKey,
         store: ClaudeDashDefaults.shared
@@ -50,7 +50,7 @@ struct SettingsView: View {
     }
 
     private var selectedAppearance: FloatingMascotAppearanceOption {
-        FloatingMascotAppearanceOption(rawValue: mascotAppearanceRawValue) ?? .runner
+        FloatingMascotAppearanceOption(rawValue: mascotAppearanceRawValue) ?? .catDrink
     }
 
     private var selectedMascotSize: FloatingMascotSizeOption {
@@ -380,7 +380,7 @@ struct SettingsView: View {
 
     private func restoreDefaults() {
         isMascotEnabled = false
-        mascotAppearanceRawValue = FloatingMascotAppearanceOption.runner.rawValue
+        mascotAppearanceRawValue = FloatingMascotAppearanceOption.catDrink.rawValue
         mascotAnimationSpeedRawValue = FloatingMascotAnimationSpeedOption.normal.rawValue
         applyMascotSize(.extraLarge)
         didCompleteSetup = true

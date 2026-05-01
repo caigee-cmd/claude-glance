@@ -152,7 +152,7 @@ struct FloatingPanelView: View {
     @AppStorage(
         FloatingMascotAppearanceOption.userDefaultsKey,
         store: ClaudeDashDefaults.shared
-    ) private var mascotAppearanceRawValue = FloatingMascotAppearanceOption.runner.rawValue
+    ) private var mascotAppearanceRawValue = FloatingMascotAppearanceOption.catDrink.rawValue
     @AppStorage(
         FloatingMascotSizeOption.userDefaultsKey,
         store: ClaudeDashDefaults.shared
@@ -187,7 +187,7 @@ struct FloatingPanelView: View {
     }
 
     private var mascotAppearanceOption: FloatingMascotAppearanceOption {
-        FloatingMascotAppearanceOption(rawValue: mascotAppearanceRawValue) ?? .runner
+        FloatingMascotAppearanceOption(rawValue: mascotAppearanceRawValue) ?? .catDrink
     }
 
     private var mascotSize: CGFloat {
