@@ -3,11 +3,40 @@
 
 import SwiftUI
 
+struct AggregatedProject: Identifiable {
+    let id: String
+    let projectName: String
+    let source: SessionSource
+    let totalDuration: Double
+    let totalCost: Double
+    let earliestStart: Date
+    let sessionCount: Int
+}
+
 struct SessionTimelineView: View {
     let sessions: [ScannedSession]
     var maxBarWidth: CGFloat = 400
 
-    @State private var hoveredSession: String?
+    @State private var hoveredProject: String?
+
+    private var aggregatedProjects: [AggregatedProject] {
+        let grouped = Dictionary(grouping: sessions) { "\($0.projectName)|\($0.source.rawValue)" }
+        return grouped.map { key, group in
+            let first = group.first!
+            let totalDur = group.reduce(0.0) { $0 + $1.durationSeconds }
+            let totalCost = group.reduce(0.0) { $0 + $1.estimatedCost }
+            return AggregatedProject(
+                id: key,
+                projectName: first.projectName,
+                source: first.source,
+                totalDuration: totalDur,
+                totalCost: totalCost,
+                earliestStart: group.map(\.startTime).min()!,
+                sessionCount: group.count
+            )
+        }
+        .sorted { $0.earliestStart < $1.earliestStart }
+    }
 
     private var timeRange: (start: Date, end: Date)? {
         guard let first = sessions.first, let last = sessions.last else { return nil }
@@ -30,9 +59,9 @@ struct SessionTimelineView: View {
                 // 时间轴标签
                 timeAxis
 
-                // Session 条
-                ForEach(sessions) { session in
-                    sessionBar(session)
+                // 按项目聚合的条
+                ForEach(aggregatedProjects) { project in
+                    projectBar(project)
                 }
             }
         }
@@ -60,25 +89,30 @@ struct SessionTimelineView: View {
         .frame(height: 12)
     }
 
-    private func sessionBar(_ session: ScannedSession) -> some View {
-        let isHovered = hoveredSession == session.sessionId
+    private func projectBar(_ project: AggregatedProject) -> some View {
+        let isHovered = hoveredProject == project.id
 
         return GeometryReader { geo in
             let width = geo.size.width
-            let barStart = barOffset(for: session, in: width)
-            let barWidth = barWidthFor(session, in: width)
+            let barStart = barOffset(for: project, in: width)
+            let barWidth = barWidthFor(project, in: width)
 
             HStack(spacing: 0) {
                 RoundedRectangle(cornerRadius: 3, style: .continuous)
-                    .fill(sessionGradient(session))
+                    .fill(projectGradient(project))
                     .frame(width: max(barWidth, 4), height: isHovered ? 20 : 16)
                     .overlay(alignment: .leading) {
                         if barWidth > 60 {
                             HStack(spacing: 3) {
-                                Text(session.projectName)
+                                Text(project.projectName)
                                     .font(.system(size: 10, weight: .medium))
                                     .lineLimit(1)
-                                Text(session.durationSeconds.durationFormatted)
+                                if project.sessionCount > 1 {
+                                    Text("\(project.sessionCount)s")
+                                        .font(.system(size: 8, weight: .medium, design: .monospaced))
+                                        .foregroundStyle(.white.opacity(0.5))
+                                }
+                                Text(project.totalDuration.durationFormatted)
                                     .font(.system(size: 9, weight: .medium, design: .monospaced))
                                     .foregroundStyle(.white.opacity(0.7))
                             }
@@ -88,7 +122,7 @@ struct SessionTimelineView: View {
                     }
                     .offset(x: barStart)
                     .onHover { hovering in
-                        hoveredSession = hovering ? session.sessionId : nil
+                        hoveredProject = hovering ? project.id : nil
                     }
 
                 Spacer(minLength: 0)
@@ -98,22 +132,22 @@ struct SessionTimelineView: View {
         .animation(.spring(response: 0.2), value: isHovered)
     }
 
-    private func barOffset(for session: ScannedSession, in totalWidth: CGFloat) -> CGFloat {
+    private func barOffset(for project: AggregatedProject, in totalWidth: CGFloat) -> CGFloat {
         guard let range = timeRange else { return 0 }
-        let offset = session.startTime.timeIntervalSince(range.start)
+        let offset = project.earliestStart.timeIntervalSince(range.start)
         return CGFloat(offset / totalDuration) * totalWidth
     }
 
-    private func barWidthFor(_ session: ScannedSession, in totalWidth: CGFloat) -> CGFloat {
-        CGFloat(session.durationSeconds / totalDuration) * totalWidth
+    private func barWidthFor(_ project: AggregatedProject, in totalWidth: CGFloat) -> CGFloat {
+        CGFloat(project.totalDuration / totalDuration) * totalWidth
     }
 
-    private func sessionGradient(_ session: ScannedSession) -> LinearGradient {
-        let costRatio = min(session.estimatedCost / 1.0, 1.0) // normalize to $1
+    private func projectGradient(_ project: AggregatedProject) -> LinearGradient {
+        let costRatio = min(project.totalCost / 1.0, 1.0)
         if costRatio > 0.5 {
             return LinearGradient(colors: [.claudeWarningOrange, .claudeWarningRed], startPoint: .leading, endPoint: .trailing)
         }
-        switch session.source {
+        switch project.source {
         case .kimi:
             return LinearGradient(colors: [.kimiCyan.opacity(0.8), .kimiCyan.opacity(0.4)], startPoint: .leading, endPoint: .trailing)
         case .claude:

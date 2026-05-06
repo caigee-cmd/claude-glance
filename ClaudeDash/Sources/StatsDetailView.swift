@@ -545,7 +545,7 @@ struct StatsDetailView: View {
 
             // 今日 Session 时间线
             VStack(alignment: .leading, spacing: 6) {
-                GlassSectionHeader(title: selectedRange.timelineTitle, trailing: "\(selectedSnapshot.sessions.count) sessions")
+                GlassSectionHeader(title: selectedRange.timelineTitle, trailing: "\(Set(selectedSnapshot.sessions.map { "\($0.projectName)|\($0.source.rawValue)" }).count) projects · \(selectedSnapshot.sessions.count) sessions")
 
                 SessionTimelineView(sessions: selectedSnapshot.sessions)
             }
