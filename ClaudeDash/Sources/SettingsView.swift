@@ -265,17 +265,20 @@ struct SettingsView: View {
     }
 
     private var appearanceGrid: some View {
-        LazyVGrid(columns: SettingsPanelStyle.appearanceColumns, spacing: SettingsPanelStyle.optionSpacing) {
-            ForEach(FloatingMascotAppearanceOption.allCases) { option in
-                MascotAppearanceTile(
-                    option: option,
-                    isSelected: option == selectedAppearance,
-                    playbackState: option == selectedAppearance ? previewPlaybackState : .stoppedAtFirstFrame
-                ) {
-                    mascotAppearanceRawValue = option.rawValue
+        ScrollView(.vertical, showsIndicators: true) {
+            LazyVGrid(columns: SettingsPanelStyle.appearanceColumns, spacing: SettingsPanelStyle.optionSpacing) {
+                ForEach(FloatingMascotAppearanceOption.allCases) { option in
+                    MascotAppearanceTile(
+                        option: option,
+                        isSelected: option == selectedAppearance,
+                        playbackState: option == selectedAppearance ? previewPlaybackState : .stoppedAtFirstFrame
+                    ) {
+                        mascotAppearanceRawValue = option.rawValue
+                    }
                 }
             }
         }
+        .frame(height: 130)
     }
 
     private var controlRail: some View {
