@@ -136,6 +136,24 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
     case catSax
     case catBall
     case catHide
+    case bunny
+    case catCrying
+    case catLaugh
+    case catLove
+    case computerGuy
+    case doggo
+    case groovyWalk
+    case morningWalk
+    case mortyCry
+    case mortyDance
+    case totoro
+    case apeWalk
+    case frogEating
+    case couple
+    case hoverboard
+    case santa
+    case happyGirl
+    case skateboard
 
     static let userDefaultsKey = "ClaudeDash_floatingMascotAppearance"
 
@@ -151,6 +169,24 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
         case .catSax: return "爵士"
         case .catSurprise: return "惊讶"
         case .catBalloons: return "梦想家"
+        case .bunny: return "小兔子"
+        case .catCrying: return "哭泣猫"
+        case .catLaugh: return "大笑猫"
+        case .catLove: return "爱心猫"
+        case .computerGuy: return "程序员"
+        case .doggo: return "小狗"
+        case .groovyWalk: return "摇摆走"
+        case .morningWalk: return "晨间漫步"
+        case .mortyCry: return "Morty哭"
+        case .mortyDance: return "Morty舞"
+        case .totoro: return "龙猫"
+        case .apeWalk: return "猩猩走路"
+        case .frogEating: return "青蛙吃虫"
+        case .couple: return "情侣"
+        case .hoverboard: return "滑板少年"
+        case .santa: return "圣诞老人"
+        case .happyGirl: return "开心女孩"
+        case .skateboard: return "滑板卡通"
         }
     }
 
@@ -164,6 +200,24 @@ enum FloatingMascotAppearanceOption: String, Codable, CaseIterable, Identifiable
         case .catSax: return "cat-sax"
         case .catSurprise: return "cat-surprise"
         case .catBalloons: return "cat-balloons"
+        case .bunny: return "bunny"
+        case .catCrying: return "cat-crying"
+        case .catLaugh: return "cat-laugh"
+        case .catLove: return "cat-love"
+        case .computerGuy: return "computer-guy"
+        case .doggo: return "doggo"
+        case .groovyWalk: return "groovy-walk"
+        case .morningWalk: return "morning-walk"
+        case .mortyCry: return "morty-cry"
+        case .mortyDance: return "morty-dance"
+        case .totoro: return "totoro"
+        case .apeWalk: return "ape-walk"
+        case .frogEating: return "frog-eating"
+        case .couple: return "couple"
+        case .hoverboard: return "hoverboard"
+        case .santa: return "santa"
+        case .happyGirl: return "happy-girl"
+        case .skateboard: return "skateboard"
         }
     }
 }
@@ -353,11 +407,15 @@ enum HookIntegrationStatus: Equatable, Sendable {
 }
 
 enum FloatingMascotSizeOption: String, Codable, CaseIterable, Identifiable, Sendable {
+    case micro
+    case mini
     case compact
     case small
     case medium
     case large
     case extraLarge
+    case xxl
+    case ultra
     case jumbo
 
     static let userDefaultsKey = "ClaudeDash_floatingMascotSize"
@@ -366,39 +424,30 @@ enum FloatingMascotSizeOption: String, Codable, CaseIterable, Identifiable, Send
 
     var title: String {
         switch self {
-        case .compact: return "更小"
-        case .small: return "小"
-        case .medium: return "中"
-        case .large: return "大"
-        case .extraLarge: return "更大"
-        case .jumbo: return "超大"
-        }
-    }
-
-    var description: String {
-        switch self {
-        case .compact:
-            return "最紧凑，尽量减少存在感。"
-        case .small:
-            return "更轻巧，但已经足够清晰。"
-        case .medium:
-            return "默认推荐，观感更平衡。"
-        case .large:
-            return "存在感最强，陪伴感更明显。"
-        case .extraLarge:
-            return "更醒目，动画细节更容易看清。"
-        case .jumbo:
-            return "上限更高，适合想要明显存在感。"
+        case .micro: return "微小"
+        case .mini: return "迷你"
+        case .compact: return "紧凑"
+        case .small: return "小巧"
+        case .medium: return "适中"
+        case .large: return "标准"
+        case .extraLarge: return "醒目"
+        case .xxl: return "巨大"
+        case .ultra: return "超大"
+        case .jumbo: return "极限"
         }
     }
 
     var mascotLength: CGFloat {
         switch self {
-        case .compact: return 52
-        case .small: return 72
-        case .medium: return 96
-        case .large: return 112
-        case .extraLarge: return 128
+        case .micro: return 44
+        case .mini: return 68
+        case .compact: return 92
+        case .small: return 116
+        case .medium: return 140
+        case .large: return 164
+        case .extraLarge: return 188
+        case .xxl: return 212
+        case .ultra: return 236
         case .jumbo: return 260
         }
     }
