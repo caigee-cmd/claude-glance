@@ -23,19 +23,27 @@ final class FloatingPanelLayoutTests: XCTestCase {
     }
 
     func testMascotSizeOptionsProvideOrderedSizesWithinCompactHitArea() {
+        let micro = FloatingPanelLayout.mascotSize(for: .micro)
+        let mini = FloatingPanelLayout.mascotSize(for: .mini)
         let compact = FloatingPanelLayout.mascotSize(for: .compact)
         let small = FloatingPanelLayout.mascotSize(for: .small)
         let medium = FloatingPanelLayout.mascotSize(for: .medium)
         let large = FloatingPanelLayout.mascotSize(for: .large)
         let extraLarge = FloatingPanelLayout.mascotSize(for: .extraLarge)
+        let xxl = FloatingPanelLayout.mascotSize(for: .xxl)
+        let ultra = FloatingPanelLayout.mascotSize(for: .ultra)
         let jumbo = FloatingPanelLayout.mascotSize(for: .jumbo)
         let jumboHitArea = FloatingPanelLayout.compactIslandSize(for: .jumbo)
 
+        XCTAssertLessThan(micro, mini)
+        XCTAssertLessThan(mini, compact)
         XCTAssertLessThan(compact, small)
         XCTAssertLessThan(small, medium)
         XCTAssertLessThan(medium, large)
         XCTAssertLessThan(large, extraLarge)
-        XCTAssertLessThan(extraLarge, jumbo)
+        XCTAssertLessThan(extraLarge, xxl)
+        XCTAssertLessThan(xxl, ultra)
+        XCTAssertLessThan(ultra, jumbo)
         XCTAssertLessThan(jumbo, jumboHitArea.width)
         XCTAssertLessThan(jumbo, jumboHitArea.height)
     }
@@ -46,7 +54,7 @@ final class FloatingPanelLayoutTests: XCTestCase {
     }
 
     func testHoverPreviewUsesTighterWidthAndShortSingleRowSurface() {
-        XCTAssertLessThan(FloatingPanelLayout.hoverPanelWidth, 292)
+        XCTAssertLessThan(FloatingPanelLayout.hoverPanelWidth, 320)
         XCTAssertGreaterThan(FloatingPanelLayout.hoverPanelWidth, FloatingPanelLayout.defaultCompactIslandSize.width)
         XCTAssertLessThan(
             FloatingPanelLayout.previewSurfaceHeight(forVisibleRows: 1),

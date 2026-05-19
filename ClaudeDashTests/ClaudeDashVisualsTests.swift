@@ -93,7 +93,12 @@ final class ClaudeDashVisualsTests: XCTestCase {
     func testMascotAppearanceOptionsExposeExpectedTitlesAndUniqueResources() {
         XCTAssertEqual(
             FloatingMascotAppearanceOption.allCases.map(\.title),
-            ["跑步", "喝水", "躲藏", "篮球", "吉他", "萨克斯", "惊讶", "气球"]
+            [
+                "奔跑者", "吉他手", "惊讶", "梦想家", "悠闲", "爵士", "调皮", "害羞",
+                "小兔子", "哭泣猫", "大笑猫", "爱心猫", "程序员", "小狗", "摇摆走",
+                "晨间漫步", "Morty哭", "Morty舞", "龙猫", "猩猩走路", "青蛙吃虫",
+                "情侣", "滑板少年", "圣诞老人", "开心女孩", "滑板卡通",
+            ]
         )
 
         let resourceNames = FloatingMascotAppearanceOption.allCases.map(\.resourceName)
