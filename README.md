@@ -5,6 +5,22 @@ A native macOS menu bar app for viewing Claude Code activity and lightweight sta
 
 ---
 
+## 🛠️ Supported Tools | 支持的工具
+
+Claude Petty monitors activity from multiple Claude interfaces:  
+Claude Petty 监控来自多个 Claude 接口的活动：
+
+| | | |
+|:-:|:-:|:-:|
+| **Claude Code** | **Codex** | **kimi-cli** |
+| IDE Integration | Code Intelligence | CLI Tool |
+| 原生 IDE 集成 | 扩展代码智能 | CLI 工具 |
+
+All activity is passively read from local `~/.claude/projects/` — no modifications required.  
+所有活动都通过被动读取本地 `~/.claude/projects/` 实现，无需任何修改。
+
+---
+
 ## 🎯 Overview | 概览
 
 **Claude Petty** passively monitors your local Claude development activity in the menu bar.
@@ -90,24 +106,6 @@ Configure your floating mascot style and size without leaving the app.
     <td align="center"><sub>Compact Mascot | 紧凑挂件</sub></td>
   </tr>
 </table>
-
----
-
-## 🛠️ Supported Tools | 支持的工具
-
-Claude Petty monitors activity from multiple Claude interfaces:
-
-Claude Petty 监控来自多个 Claude 接口的活动：
-
-| Tool | Description |
-|------|-------------|
-| **Claude Code** | Native IDE integration with real-time session tracking |
-| **Codex** | Extended code intelligence and CLI-based interactions |
-| **kimi-cli** | Alternative CLI tool with session support |
-
-All activity is passively read from local `~/.claude/projects/` transcripts — no modifications required.
-
-所有活动都通过被动读取本地 `~/.claude/projects/` 下的 transcript 实现，无需任何修改。
 
 ---
 
