@@ -23,6 +23,16 @@ A short walkthrough of the menu bar overview, daily stats, and mascot settings.
 - Local-first by default, with no hook installation required
 - CSV / JSON export
 
+## Supported Tools
+
+Claude Petty monitors activity from:
+
+- **Claude Code** — Native IDE integration for Claude with real-time session tracking
+- **Codex** — Extended code intelligence and CLI-based Claude interactions
+- **kimi-cli** — Alternative CLI tool for Claude interactions with session support
+
+All tools' activity is passively read from local `~/.claude/projects/` transcripts with no modification required.
+
 ## Screenshots
 
 ### Menu Bar Overview

@@ -23,6 +23,16 @@ Claude Petty 默认以被动读取方式工作：扫描 `~/.claude/projects/` �
 - 默认纯本地，无需安装 Hook
 - CSV / JSON 导出
 
+## 支持的工具
+
+Claude Petty 监控以下工具的活动：
+
+- **Claude Code** — Claude 原生 IDE 集成，实时 session 追踪
+- **Codex** — 扩展代码智能和 CLI 方式 Claude 交互
+- **kimi-cli** — 另一款支持 session 的 Claude 交互 CLI 工具
+
+所有工具的活动都通过被动读取本地 `~/.claude/projects/` 下的 transcript 实现，无需任何修改。
+
 ## 界面预览
 
 ### 菜单栏概览
