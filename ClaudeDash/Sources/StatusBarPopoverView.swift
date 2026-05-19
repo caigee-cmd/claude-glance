@@ -126,15 +126,9 @@ struct StatusBarPopoverView: View {
                     .padding(.bottom, 10)
             }
 
-            if filteredActiveSessions.isEmpty && filteredRecentSessions.isEmpty {
+            if !filteredActiveSessions.isEmpty || !filteredRecentSessions.isEmpty {
                 sectionDivider
-
-                emptyState
-                    .padding(.horizontal, PopoverPanelStyle.outerPadding)
-                    .padding(.vertical, 12)
             }
-
-            sectionDivider
 
             actionBar
                 .padding(.horizontal, 10)
@@ -348,29 +342,6 @@ struct StatusBarPopoverView: View {
                 RecentSessionRow(session: session)
             }
         }
-    }
-
-    // MARK: - Empty State
-
-    private var emptyState: some View {
-        HStack(spacing: 10) {
-            Image(systemName: ClaudeDashSymbols.appBadge)
-                .font(.system(size: 20))
-                .foregroundStyle(.quaternary)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("No sessions yet")
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(.secondary)
-                Text("Start a task to light this up")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(.primary.opacity(PopoverPanelStyle.tertiaryTextOpacity))
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .popoverSurfaceBackground(cornerRadius: 14)
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Action Bar
